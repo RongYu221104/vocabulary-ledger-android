@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">四六级词汇账本</string>
+    <string name="title_activity_main">四六级词汇账本</string>
+    <string name="package_name">site.chatgpt.rongyu1104.cetledger</string>
+    <string name="custom_url_scheme">site.chatgpt.rongyu1104.cetledger</string>
+</resources>

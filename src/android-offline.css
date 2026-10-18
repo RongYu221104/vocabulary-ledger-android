@@ -1,0 +1,164 @@
+/* Android Offline Edition — touch, safe-area, soft-keyboard, and offline dialog refinements
+   Preserves 100% of the Claude + Manga editorial design language in styles.css. */
+
+html, body {
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+body {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* In Android offline mode, local storage is durable, so the status dot stays reassuringly green (--ok). */
+html.is-android-offline .sync-state[data-state="guest"] .status-dot {
+  background: var(--ok);
+}
+
+html.is-android-offline .eyebrow #mode-label {
+  background: var(--clay-strong);
+  color: var(--surface);
+}
+
+/* Cloud-only features (Community, Online Share) are visually muted in offline mode but remain interactive to explain why. */
+html.is-android-offline [data-offline-disabled="true"] {
+  opacity: 0.68;
+}
+
+html.is-android-offline [data-offline-disabled="true"]:hover,
+html.is-android-offline [data-offline-disabled="true"]:active {
+  opacity: 0.92;
+}
+
+/* Offline Notice Dialog — follows the exact framed paper object aesthetic of editor-dialog / confirm-dialog */
+#offline-notice-dialog {
+  width: min(460px, calc(100vw - 28px));
+  max-height: calc(100dvh - 28px);
+  padding: 22px 24px 20px;
+  border: 3px solid var(--ink);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 6px 6px 0 var(--clay-strong);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+#offline-notice-dialog::backdrop {
+  background: rgb(42 37 31 / 0.42);
+}
+
+.offline-notice-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.offline-notice-art {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.offline-notice-kicker {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clay-press);
+  font-weight: 700;
+}
+
+#offline-notice-title {
+  margin-top: 3px;
+  font-size: 19px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.offline-notice-body {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+.offline-notice-body p + p {
+  margin-top: 8px;
+}
+
+.offline-notice-badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 10px;
+  border: 1.5px solid var(--ink);
+  background: var(--clay-tint);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#offline-notice-dialog .dialog-actions {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Soft keyboard & small screen resilience for all modal dialogs */
+#editor-dialog,
+#confirm-dialog,
+#auth-dialog {
+  max-height: calc(100dvh - 20px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 560px) {
+  #editor-dialog,
+  #confirm-dialog,
+  #auth-dialog,
+  #offline-notice-dialog {
+    width: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
+    padding: 18px 16px 16px;
+  }
+
+  .masthead-rail {
+    gap: 4px 8px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid var(--hair);
+    padding-top: 2px;
+  }
+
+  .account-tools {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  #sign-in {
+    min-height: 32px;
+    padding: 0 10px;
+    font-size: 11.5px;
+  }
+}
+
+@media (max-width: 380px) {
+  .account-name {
+    max-width: 118px;
+    padding: 0 4px;
+    font-size: 11.5px;
+  }
+
+  .tool, .tool-link {
+    padding: 0 6px;
+    font-size: 11.5px;
+  }
+}

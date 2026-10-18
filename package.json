@@ -1,0 +1,19 @@
+{
+  "name": "cet-vocabulary-ledger-android-offline",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone offline Android APK project for CET Vocabulary Ledger (Capacitor + Android)",
+  "scripts": {
+    "sync:web": "node scripts/sync-web.mjs",
+    "cap:sync": "node scripts/sync-web.mjs && npx cap sync android",
+    "apk:debug": "node scripts/build-apk.mjs",
+    "test:offline": "node --test tests/android-offline.test.mjs tests/browser-e2e.test.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0"
+  }
+}
