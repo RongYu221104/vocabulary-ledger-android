@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
-const publicDir = path.resolve(projectRoot, '..', 'public');
+const publicDir = path.resolve(projectRoot, '..', 'cloud', 'public');
 const srcDir = path.resolve(projectRoot, 'src');
 const wwwDir = path.resolve(projectRoot, 'www');
 
@@ -28,7 +28,7 @@ function assertReplace(source, needle, replacement, label) {
   return source.replace(needle, replacement);
 }
 
-// 1. Clean and copy cloud/public/* -> cloud/android-offline/www/*
+// 1. Copy the sibling cloud/public source into this standalone Android project's www/.
 if (fs.existsSync(wwwDir)) {
   fs.rmSync(wwwDir, { recursive: true, force: true });
 }
@@ -172,4 +172,4 @@ html = assertReplace(
 fs.writeFileSync(ledgerHtmlPath, html, 'utf8');
 fs.writeFileSync(path.join(wwwDir, 'index.html'), html, 'utf8');
 
-console.log('[sync-web] Successfully synced cloud/public -> cloud/android-offline/www');
+console.log('[sync-web] Successfully synced ../cloud/public -> android-offline/www');

@@ -2,10 +2,12 @@
 
 本项目基于 `cloud/public` 最新网页端源码，使用 **Capacitor 6 + Android 原生持久层** 构建可独立安装、100% 离线运行的 Android 应用（包名：`site.chatgpt.rongyu1104.cetledger`，应用名：`四六级词汇账本`）。
 
+项目独立位于 `cet-vocabulary-ledger/android-offline/`，与 `cet-vocabulary-ledger/cloud/` 并列，拥有自己的 Git 仓库。初始源码来自网站仓库 Android 分支提交 `06f55f892d617d060a999c2dcc8f2600d91c08da`，原分支历史仍保留在网站仓库中。2026-10-18 迁移核对 67 个源码文件及现有 APK 哈希完全一致；资源同步及 5 项离线集成测试通过，未重新构建 APK。
+
 ## 1. 目录结构
 
 - `capacitor.config.json` — Capacitor 工程配置（`webDir: "www"`）
-- `scripts/sync-web.mjs` — 从 `../public` 同步网页静态资源到 `www/` 并注入离线适配层（不改动 `../public` 任何源码）
+- `scripts/sync-web.mjs` — 从同级网站工程的 `../cloud/public` 同步网页静态资源到 `www/` 并注入离线适配层（不改动网站源码）
 - `scripts/build-apk.mjs` — 一键同步网页资源、执行 `cap sync android`、运行 JUnit 单元测试并构建 Debug APK
 - `src/android-offline.css` — Android 触控、安全区、软键盘弹窗高度、离线状态徽标及窄屏防溢出样式
 - `src/android-offline.js` — 离线存储适配器（`OfflineLedgerStore` + `OfflineReviewStore`）、登录/云端功能拦截提示、JSON 原生导出桥接、软键盘聚焦滚动与系统返回手势状态机
@@ -20,7 +22,7 @@
 ## 2. 常用命令
 
 ```bash
-# 同步 ../public 网页源码到 www/ 并注入 Android 离线层
+# 同步 ../cloud/public 网页源码到 www/ 并注入 Android 离线层
 npm run sync:web
 
 # 运行离线集成测试 + Chromium WebView 端到端测试
