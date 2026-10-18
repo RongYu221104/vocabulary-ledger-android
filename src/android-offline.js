@@ -21,7 +21,17 @@
   const nativeFetch = window.fetch ? window.fetch.bind(window) : null;
   window.fetch = async function (input, init) {
     const url = typeof input === 'string' ? input : input?.url || '';
-    if (url.startsWith('/api/') || url.includes('/api/ledger') || url.includes('/api/review') || url.includes('/api/session') || url.includes('/api/shares') || url.includes('/api/community')) {
+    if (
+      url.startsWith('/api/') ||
+      url.startsWith('/signin-') ||
+      url.startsWith('/signout-') ||
+      url.includes('/api/ledger') ||
+      url.includes('/api/review') ||
+      url.includes('/api/session') ||
+      url.includes('/api/shares') ||
+      url.includes('/api/community') ||
+      url.includes('/api/profile')
+    ) {
       throw new TypeError(OFFLINE_PROMPT);
     }
     if (!nativeFetch) throw new TypeError(OFFLINE_PROMPT);
@@ -32,10 +42,74 @@
     return {
       format: R.FORMAT,
       version: R.VERSION,
-      settings: { ...R.DEFAULTS },
+      settings: R.normalizeSettings ? R.normalizeSettings(R.DEFAULTS) : { ...R.DEFAULTS },
       cards: [],
       days: []
     };
+  }
+
+  function migrateLedgerObject(rawLedger) {
+    if (!rawLedger || typeof rawLedger !== 'object' || Array.isArray(rawLedger)) {
+      throw new Error('Invalid ledger object');
+    }
+    try {
+      return M.validate(rawLedger);
+    } catch {
+      // Non-destructive fallback for legacy local state missing top-level metadata or containing extra keys
+      return M.validate({
+        format: M.FORMAT,
+        schemaVersion: Number.isInteger(rawLedger.schemaVersion) ? rawLedger.schemaVersion : 1,
+        revision: Number.isInteger(rawLedger.revision) && rawLedger.revision >= 0 ? rawLedger.revision : 0,
+        tags: Array.isArray(rawLedger.tags) ? rawLedger.tags : [],
+        words: Array.isArray(rawLedger.words) ? rawLedger.words : []
+      });
+    }
+  }
+
+  function migrateReviewSection(rawReview) {
+    if (!rawReview || typeof rawReview !== 'object' || Array.isArray(rawReview)) {
+      return emptyReviewSection();
+    }
+    try {
+      return R.section(rawReview);
+    } catch (err) {
+      // Non-destructive salvage: keep normalized settings and every valid card/day record
+      console.warn('[AndroidOffline] Salvaging review section during migration:', err);
+      const settings = R.normalizeSettings ? R.normalizeSettings(rawReview.settings) : { ...R.DEFAULTS };
+      const cards = [];
+      const seenWords = new Set();
+      if (Array.isArray(rawReview.cards)) {
+        for (const item of rawReview.cards) {
+          try {
+            const c = R.card(item);
+            if (!seenWords.has(c.wordId)) {
+              seenWords.add(c.wordId);
+              cards.push(c);
+            }
+          } catch {}
+        }
+      }
+      const days = [];
+      const seenDays = new Set();
+      if (Array.isArray(rawReview.days)) {
+        for (const item of rawReview.days) {
+          try {
+            const d = R.day(item, 1e7);
+            if (!seenDays.has(d.day)) {
+              seenDays.add(d.day);
+              days.push(d);
+            }
+          } catch {}
+        }
+      }
+      return {
+        format: R.FORMAT,
+        version: R.VERSION,
+        settings,
+        cards,
+        days
+      };
+    }
   }
 
   function parseEnvelope(raw) {
@@ -45,8 +119,8 @@
       if (!parsed || typeof parsed !== 'object') return null;
       // Accept either our wrapped envelope or a direct ledger backup with optional review section.
       if (parsed.format === ENVELOPE_FORMAT && parsed.ledger) {
-        const ledger = M.validate(parsed.ledger);
-        const review = parsed.review ? R.section(parsed.review) : emptyReviewSection();
+        const ledger = migrateLedgerObject(parsed.ledger);
+        const review = migrateReviewSection(parsed.review);
         const masteries = Array.isArray(parsed.masteries)
           ? parsed.masteries.filter(x => typeof x === 'string' && x.length <= 120)
           : [];
@@ -59,12 +133,11 @@
         };
       }
       if (parsed.tags && parsed.words) {
-        const split = R.splitBackup(raw);
-        const ledger = M.parse(split.ledgerRaw);
-        const review = split.review || emptyReviewSection();
+        const ledger = migrateLedgerObject(parsed);
+        const review = migrateReviewSection(parsed.review);
         return {
           format: ENVELOPE_FORMAT,
-          savedAt: new Date().toISOString(),
+          savedAt: typeof parsed.exportedAt === 'string' ? parsed.exportedAt : new Date().toISOString(),
           ledger,
           review,
           masteries: []
@@ -76,15 +149,27 @@
     return null;
   }
 
+  function reviewActivityScore(env) {
+    const rev = env?.review;
+    if (!rev) return 0;
+    const cardScore = Array.isArray(rev.cards)
+      ? rev.cards.reduce((sum, c) => sum + 1 + (Number(c?.reps) || 0) + (Number(c?.lapses) || 0), 0)
+      : 0;
+    const dayScore = Array.isArray(rev.days)
+      ? rev.days.reduce((sum, d) => sum + (Number(d?.flips) || 0) + (Number(d?.ratings) || 0) + (Number(d?.learned) || 0) + (Number(d?.mastered) || 0), 0)
+      : 0;
+    return cardScore + dayScore;
+  }
+
   function pickFresherEnvelope(a, b) {
     if (!a) return b;
     if (!b) return a;
     const revA = Number(a.ledger?.revision || 0);
     const revB = Number(b.ledger?.revision || 0);
     if (revA !== revB) return revA > revB ? a : b;
-    const cardsA = Array.isArray(a.review?.cards) ? a.review.cards.length : 0;
-    const cardsB = Array.isArray(b.review?.cards) ? b.review.cards.length : 0;
-    if (cardsA !== cardsB) return cardsA > cardsB ? a : b;
+    const scoreA = reviewActivityScore(a);
+    const scoreB = reviewActivityScore(b);
+    if (scoreA !== scoreB) return scoreA > scoreB ? a : b;
     const timeA = String(a.savedAt || '');
     const timeB = String(b.savedAt || '');
     return timeB > timeA ? b : a;

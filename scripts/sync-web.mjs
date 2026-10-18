@@ -72,8 +72,8 @@ appJs = assertReplace(
 
 appJs = assertReplace(
   appJs,
-  `  function download(raw, filename) {\r\n    const url = URL.createObjectURL(new Blob([raw], { type: 'application/json;charset=utf-8' }));`,
-  `  function download(raw, filename) {\r\n    if (typeof window.__androidExportJson === 'function') { window.__androidExportJson(raw, filename); return; }\r\n    const url = URL.createObjectURL(new Blob([raw], { type: 'application/json;charset=utf-8' }));`,
+  `  function download(raw, filename) {`,
+  `  function download(raw, filename) {\n    if (typeof window.__androidExportJson === 'function') { window.__androidExportJson(raw, filename); return; }`,
   'app.js download() native export hook'
 );
 

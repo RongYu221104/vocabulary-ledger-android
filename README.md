@@ -1,8 +1,8 @@
 # CET Vocabulary Ledger — Android 离线版 (`android-offline`)
 
-本项目基于 `cloud/public` 最新网页端源码，使用 **Capacitor 6 + Android 原生持久层** 构建可独立安装、100% 离线运行的 Android 应用（包名：`site.chatgpt.rongyu1104.cetledger`，应用名：`四六级词汇账本`）。
+本项目基于 `cloud/public` 最新网页端源码，使用 **Capacitor 6 + Android 原生持久层** 构建可独立安装、100% 离线运行的 Android 应用（包名：`site.chatgpt.rongyu1104.cetledger`，应用名：`四六级词汇账本`，当前版本：`1.1` / `versionCode 2`）。
 
-项目独立位于 `cet-vocabulary-ledger/android-offline/`，与 `cet-vocabulary-ledger/cloud/` 并列，拥有自己的 Git 仓库。初始源码来自网站仓库 Android 分支提交 `06f55f892d617d060a999c2dcc8f2600d91c08da`，原分支历史仍保留在网站仓库中。2026-10-18 迁移核对 67 个源码文件及现有 APK 哈希完全一致；资源同步及 5 项离线集成测试通过，未重新构建 APK。
+项目独立位于 `cet-vocabulary-ledger/android-offline/`，与 `cet-vocabulary-ledger/cloud/` 并列，拥有自己的 Git 仓库。2026-10-18 已同步网页端最新 `main`（`2eb15e4`）的全部离线可用功能与 UI 更新（含 FSRS-6 智能复习与遗忘曲线图表、30 天背诵趋势、五段记忆分布、SRS 设置容错归一化、词条录入框单行自适应与间距对齐、非破坏性旧数据迁移），完成 `versionCode 2` 升级构建并通过全部 8 项离线单元/WebView E2E 测试与 3 项 JUnit 4 原生存储测试。
 
 ## 1. 目录结构
 

@@ -356,8 +356,18 @@ test('Android back gesture state machine handles dialogs, review views, search c
   assert.equal(env.ctx.__handleAndroidBack(), 'handled');
   assert.equal(offlineDlg.open, false);
 
-  // 2. Review dialog in session view -> back clicks #rv-back
+  // 2. Review dialog in guide view (forgetting curve) -> back clicks #rv-guide-back
   const reviewDlg = document.getElementById('review-dialog');
+  const rvGuideBack = document.getElementById('rv-guide-back');
+  let rvGuideBackClicked = false;
+  rvGuideBack.click = () => { rvGuideBackClicked = true; reviewDlg.dataset.view = 'home'; };
+  reviewDlg.open = true;
+  reviewDlg.dataset.view = 'guide';
+  assert.equal(env.ctx.__handleAndroidBack(), 'handled');
+  assert.equal(rvGuideBackClicked, true);
+  assert.equal(reviewDlg.dataset.view, 'home');
+
+  // 3. Review dialog in session view -> back clicks #rv-back
   const rvBack = document.getElementById('rv-back');
   let rvBackClicked = false;
   rvBack.click = () => { rvBackClicked = true; reviewDlg.dataset.view = 'home'; };
@@ -366,20 +376,153 @@ test('Android back gesture state machine handles dialogs, review views, search c
   assert.equal(env.ctx.__handleAndroidBack(), 'handled');
   assert.equal(rvBackClicked, true);
 
-  // 3. Review dialog in home view -> back closes review dialog
+  // 4. Review dialog in home view -> back closes review dialog
   const rvClose = document.getElementById('rv-close');
   rvClose.click = () => { reviewDlg.open = false; };
   assert.equal(env.ctx.__handleAndroidBack(), 'handled');
   assert.equal(reviewDlg.open, false);
 
-  // 4. Local search active -> back clears local search
+  // 5. Local search active -> back clears local search
   const localSearch = document.getElementById('local-search');
   localSearch.value = 'resilient';
   localSearch.dispatchEvent = () => {};
   assert.equal(env.ctx.__handleAndroidBack(), 'handled');
   assert.equal(localSearch.value, '');
 
-  // 5. Root view -> first back returns 'toast', second back within 2s returns 'exit'
+  // 6. Root view -> first back returns 'toast', second back within 2s returns 'exit'
   assert.equal(env.ctx.__handleAndroidBack(), 'toast');
   assert.equal(env.ctx.__handleAndroidBack(), 'exit');
 });
+
+test('FSRS-6 forgetting curve math, retention-sensitive intervals, and SRS settings normalization match web version', () => {
+  const env = createOfflineVmContext();
+  const { LedgerFSRS: F, LedgerReview: R } = env.ctx;
+  const now = Date.UTC(2026, 9, 18, 8, 0, 0);
+
+  // 1. Forgetting curve retrievability R(t, S) = (1 + factor * t / S)^(-w20)
+  assert.equal(F.retrievability(0, 10), 1);
+  const rAtS = F.retrievability(10, 10);
+  assert.ok(Math.abs(rAtS - 0.9) < 1e-6, `Retrievability at t === S must be 0.9, got ${rAtS}`);
+  assert.ok(F.retrievability(5, 10) > 0.9);
+  assert.ok(F.retrievability(20, 10) < 0.9);
+
+  // 2. Target retention controls scheduled intervals: higher retention -> shorter interval
+  const iv85 = F.intervalFor(10, 0.85);
+  const iv90 = F.intervalFor(10, 0.90);
+  const iv95 = F.intervalFor(10, 0.95);
+  assert.ok(iv85 > iv90 && iv90 > iv95, `Expected iv85 (${iv85}) > iv90 (${iv90}) > iv95 (${iv95})`);
+
+  // 3. Preview on a new card reflects target retention and guards invalid retention values
+  const emptyCard = F.empty('word_1');
+  const prev90 = F.preview(emptyCard, now, { retention: 0.9 });
+  const prev95 = F.preview(emptyCard, now, { retention: 0.95 });
+  const prevInvalid = F.preview(emptyCard, now, { retention: 'bad' });
+  assert.equal(F.label(prev90[3].due - now), '2 天');
+  assert.equal(F.label(prev95[3].due - now), '1 天');
+  assert.equal(F.label(prevInvalid[3].due - now), F.label(prev90[3].due - now));
+
+  // 4. normalizeSettings handles presets, custom values, zero newPerDay, numeric strings, and damaged fields
+  assert.deepEqual({ ...R.normalizeSettings(null) }, { newPerDay: 20, retention: 0.9 });
+  assert.deepEqual({ ...R.normalizeSettings({ newPerDay: 0, retention: 0.85 }) }, { newPerDay: 0, retention: 0.85 });
+  assert.deepEqual({ ...R.normalizeSettings({ newPerDay: '50', retention: '0.95' }) }, { newPerDay: 50, retention: 0.95 });
+  assert.deepEqual({ ...R.normalizeSettings({ newPerDay: 17, retention: 0.875 }) }, { newPerDay: 17, retention: 0.875 });
+  assert.deepEqual({ ...R.normalizeSettings({ newPerDay: 50, retention: 2 }) }, { newPerDay: 50, retention: 0.9 });
+  assert.deepEqual({ ...R.normalizeSettings({ newPerDay: -5, retention: 0.85 }) }, { newPerDay: 20, retention: 0.85 });
+
+  // 5. R.plan respects newPerDay: 0 (due reviews still scheduled, new cards capped at 0)
+  const words = [
+    { id: 'w_due', english: 'alpha', meaning: 'n. 阿尔法', mastered: false },
+    { id: 'w_new', english: 'beta', meaning: 'n. 贝塔', mastered: false }
+  ];
+  const dueCard = {
+    ...F.review(F.empty('w_due'), 3, now - 5 * 86400000, { retention: 0.9 }),
+    due: now - 3600000
+  };
+  const cardsMap = new Map([['w_due', dueCard]]);
+  const planZeroNew = R.plan({
+    words,
+    cards: cardsMap,
+    now,
+    settings: { newPerDay: 0, retention: 0.9 },
+    learnedToday: 0
+  });
+  assert.equal(planZeroNew.due.length, 1);
+  assert.equal(planZeroNew.fresh.length, 0);
+  assert.equal(planZeroNew.due[0], 'w_due');
+});
+
+test('Non-destructive local state migration preserves legacy v1 data and salvages partially damaged review records', async () => {
+  const legacyV1Envelope = JSON.stringify({
+    format: 'cet-android-offline-v1',
+    savedAt: '2026-10-17T12:00:00.000Z',
+    ledger: {
+      // Legacy schemaVersion 1 without recordVersion or note/example fields
+      format: 'cet-vocabulary-ledger',
+      schemaVersion: 1,
+      revision: 4,
+      tags: [
+        { id: 'tag_legacy', name: '25-06-1-Reading', date: '2025-06-15', createdAt: '2025-06-15T00:00:00.000Z', updatedAt: '2025-06-15T00:00:00.000Z' }
+      ],
+      words: [
+        { id: 'word_legacy_1', tagId: 'tag_legacy', english: 'LegacyWord', meaning: 'n. 旧版词条', mastered: false, createdAt: '2025-06-15T00:00:00.000Z', updatedAt: '2025-06-15T00:00:00.000Z' }
+      ]
+    },
+    review: {
+      format: 'cet-review',
+      version: 1,
+      extraLegacyProperty: 'should-not-discard-state',
+      settings: { newPerDay: '30', retention: 'invalid-retention' },
+      cards: [
+        {
+          wordId: 'word_legacy_1',
+          state: 2,
+          stability: 6.5,
+          difficulty: 5.2,
+          reps: 2,
+          lapses: 0,
+          due: Date.UTC(2026, 9, 19),
+          lastReview: Date.UTC(2026, 9, 13)
+        },
+        {
+          wordId: '', // corrupted card entry that should be skipped without losing valid cards
+          state: 'bad'
+        }
+      ],
+      days: [
+        { day: '2026-10-17', flips: 5, ratings: 2, lapses: 0, learned: 1, mastered: 0 },
+        { day: 'bad-date', flips: -1 }
+      ]
+    },
+    masteries: ['2026-10-17:word_legacy_1']
+  });
+
+  const env = createOfflineVmContext({ initialNativeState: legacyV1Envelope });
+  const store = new env.ctx.LedgerCloud.GuestStore();
+  const reviewStore = new env.ctx.LedgerReview.GuestReviewStore();
+
+  let hydrated = null;
+  await env.ctx.__onOfflineGuestReady({
+    getData: () => hydrated,
+    setData: next => { hydrated = next; },
+    getStore: () => store,
+    getReviewStore: () => reviewStore,
+    getReviewUI: () => null,
+    feedback: () => {},
+    status: () => {},
+    render: () => {}
+  });
+
+  assert.equal(hydrated.schemaVersion, 2);
+  assert.equal(hydrated.revision, 4);
+  assert.equal(hydrated.tags.length, 1);
+  assert.equal(hydrated.words.length, 1);
+  assert.equal(hydrated.words[0].english, 'LegacyWord');
+  assert.equal(reviewStore.settings.newPerDay, 30);
+  assert.equal(reviewStore.settings.retention, 0.9);
+  assert.equal(reviewStore.cards.size, 1);
+  assert.equal(reviewStore.cards.get('word_legacy_1').reps, 2);
+  assert.equal(reviewStore.days.size, 1);
+  assert.equal(reviewStore.days.get('2026-10-17').flips, 5);
+  assert.equal(reviewStore.masteries.has('2026-10-17:word_legacy_1'), true);
+});
+
