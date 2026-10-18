@@ -1,8 +1,12 @@
-# CET Vocabulary Ledger — Android 离线版 (`android-offline`)
+# Vocabulary Ledger — Android 离线版 (`android-offline`)
 
-本项目基于 `cloud/public` 最新网页端源码，使用 **Capacitor 6 + Android 原生持久层** 构建可独立安装、100% 离线运行的 Android 应用（包名：`site.chatgpt.rongyu1104.cetledger`，应用名：`四六级词汇账本`，当前版本：`1.1` / `versionCode 2`）。
+本项目基于 `cloud/public` 最新网页端源码，使用 **Capacitor 6 + Android 原生持久层** 构建可独立安装、100% 离线运行的 Android 应用（包名：`site.chatgpt.rongyu1104.cetledger`，应用名：`词汇账本`，当前版本：`1.1.1` / `versionCode 3`）。
 
-项目独立位于 `cet-vocabulary-ledger/android-offline/`，与 `cet-vocabulary-ledger/cloud/` 并列，拥有自己的 Git 仓库。2026-10-18 已同步网页端最新 `main`（`2eb15e4`）的全部离线可用功能与 UI 更新（含 FSRS-6 智能复习与遗忘曲线图表、30 天背诵趋势、五段记忆分布、SRS 设置容错归一化、词条录入框单行自适应与间距对齐、非破坏性旧数据迁移），完成 `versionCode 2` 升级构建并通过全部 8 项离线单元/WebView E2E 测试与 3 项 JUnit 4 原生存储测试。
+项目独立位于 `vocabulary-ledger/android-offline/`，与 `vocabulary-ledger/cloud/` 并列，拥有自己的 Git 仓库。2026-10-18 已同步更名前网页端业务基线 `main`（`2eb15e4`）的全部离线可用功能与 UI 更新（含 FSRS-6 智能复习与遗忘曲线图表、30 天背诵趋势、五段记忆分布、SRS 设置容错归一化、词条录入框单行自适应与间距对齐、非破坏性旧数据迁移），完成 `versionCode 2` 升级构建并通过全部 8 项离线单元/WebView E2E 测试与 3 项 JUnit 4 原生存储测试。
+
+品牌更名仅修改显示名称、下载文件名与版本号；包名、签名、存储名称、WebView origin 及 JSON 协议保持不变。上面的 1.1 / versionCode 2 验证叙述是更名前的历史基线，本轮结果见 `../cloud/qa/brand-rename/REPORT.md`。
+
+本轮 1.1.1 / versionCode 3 已通过 7 项离线集成测试、1 项真实 Chromium/WebView 全流程与七档视口测试、4 项原生存储及 1 项模板 JUnit 测试。新旧 APK 签名 SHA-256 均为 `387d7db875d22f44070c79240e01abdb88af24a36f97c49f70aae082c2296957`；未连接真机，原位安装升级尚未实测。
 
 ## 1. 目录结构
 
@@ -17,7 +21,7 @@
   - `app/src/test/java/site/chatgpt/rongyu1104/cetledger/OfflineStorageBridgeTest.java` — 原生持久层 JUnit 4 单元测试（含崩溃恢复与损坏回退测试）
 - `tests/android-offline.test.mjs` — 离线包完整性、CRUD + FSRS-6 持久化、JSON v1/v2 导入导出与合并、云端拦截提示及返回手势集成测试
 - `tests/browser-e2e.test.mjs` — 基于真实 Chromium/WebView 内核（CDP）的端到端测试与 7 档屏幕宽度（`320px`–`1280px`）零横向溢出验证
-- `releases/cet-vocabulary-ledger-offline-debug.apk` — 构建输出的独立可安装 Debug APK
+- `releases/vocabulary-ledger-offline-debug.apk` — 构建输出的独立可安装 Debug APK
 
 ## 2. 常用命令
 

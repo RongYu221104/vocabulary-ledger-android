@@ -58,14 +58,14 @@ execSync(`${gradlew} testDebugUnitTest assembleDebug --no-daemon`, {
 const builtApk = path.join(androidDir, 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
 const releasesDir = path.join(projectRoot, 'releases');
 fs.mkdirSync(releasesDir, { recursive: true });
-const releaseApk = path.join(releasesDir, 'cet-vocabulary-ledger-offline-debug.apk');
+const releaseApk = path.join(releasesDir, 'vocabulary-ledger-offline-debug.apk');
 fs.copyFileSync(builtApk, releaseApk);
 
 const bytes = fs.readFileSync(builtApk);
 const sha256 = crypto.createHash('sha256').update(bytes).digest('hex');
 
 console.log('\n============================================================');
-console.log('CET Vocabulary Ledger Android Offline APK Built Successfully');
+console.log('Vocabulary Ledger Android Offline APK Built Successfully');
 console.log('Gradle APK Path:  ', builtApk);
 console.log('Release APK Path: ', releaseApk);
 console.log('File Size:        ', bytes.length, `bytes (${(bytes.length / (1024 * 1024)).toFixed(2)} MiB)`);

@@ -135,7 +135,7 @@ public class MainActivity extends BridgeActivity {
 
     private void handleExportResult(int resultCode, Intent data) {
         String content = pendingExportJson;
-        String fallbackName = pendingExportFilename != null ? pendingExportFilename : "cet-vocabulary-ledger.json";
+        String fallbackName = pendingExportFilename != null ? pendingExportFilename : "vocabulary-ledger.json";
         pendingExportJson = null;
         pendingExportFilename = null;
 

@@ -448,7 +448,7 @@
   window.__lastAutoBackupJson = null;
 
   window.__androidExportJson = function (raw, filename) {
-    const isAutoBackup = filename.startsWith('cet-before-restore-') || filename.startsWith('cet-before-merge-');
+    const isAutoBackup = /^(?:vocabulary|cet)-before-(?:restore|merge)-/.test(filename);
     if (isAutoBackup) {
       window.__lastAutoBackupJson = { filename, raw };
       idbSaveBackup(filename, raw);

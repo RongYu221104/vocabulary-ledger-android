@@ -134,7 +134,7 @@ class CdpSession {
 }
 
 async function launchHeadlessBrowser(exePath) {
-  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cet-offline-e2e-'));
+  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'vocabulary-offline-e2e-'));
   const proc = spawn(exePath, [
     '--headless=new',
     '--disable-gpu',
@@ -467,7 +467,7 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, pers
       await new Promise(r => setTimeout(r, 120));
       return {
         tagCards: document.querySelectorAll('#tag-list .tag-card').length,
-        hasAutoBackup: Boolean(window.__lastAutoBackupJson?.filename?.startsWith('cet-before-merge-'))
+        hasAutoBackup: Boolean(window.__lastAutoBackupJson?.filename?.startsWith('vocabulary-before-merge-'))
       };
     })()`);
     assert.equal(afterMerge.tagCards, 2);

@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Durable local storage bridge for CET Vocabulary Ledger Android Offline Edition.
+ * Durable local storage bridge for Vocabulary Ledger Android Offline Edition.
  * Uses atomic fsync file writes (primary + .bak + .tmp) inside internal app storage
  * plus an embedded SQLite mirror so data survives app close, force-stop, and device reboot.
  */
@@ -104,7 +104,7 @@ public class OfflineStorageBridge {
         if (!dir.exists() && !dir.mkdirs()) {
             return false;
         }
-        String safeName = sanitizeFilename(filename, "cet-backup.json");
+        String safeName = sanitizeFilename(filename, "vocabulary-backup.json");
         File target = new File(dir, safeName);
         File tmp = new File(dir, safeName + ".tmp");
         boolean ok = writeAtomicFile(target, tmp, null, json);
@@ -117,7 +117,7 @@ public class OfflineStorageBridge {
         if (exportDelegate == null || !isValidJsonEnvelope(json)) {
             return;
         }
-        String safeName = sanitizeFilename(filename, "cet-vocabulary-ledger.json");
+        String safeName = sanitizeFilename(filename, "vocabulary-ledger.json");
         exportDelegate.onRequestExportJson(safeName, json);
     }
 

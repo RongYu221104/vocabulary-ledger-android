@@ -315,6 +315,15 @@ test('JSON export and import (schemaVersion 1 & 2, merge & overwrite) are 100% c
   env.ctx.__androidExportJson(rawExport, 'cet-before-restore-2026-10-18-12345.json');
   assert.equal(env.exports.length, 1, 'Auto-backup must not trigger interactive picker');
   assert.equal(env.autoBackups.has('cet-before-restore-2026-10-18-12345.json'), true);
+  for (const prefix of ['vocabulary-before-restore', 'vocabulary-before-merge', 'cet-before-merge']) {
+    const name = prefix + '-2026-10-18-12345.json';
+    env.ctx.__androidExportJson(rawExport, name);
+    assert.equal(env.autoBackups.has(name), true, name + ' remains an automatic backup');
+    assert.equal(env.exports.length, 1, 'Automatic backups must not open the export picker');
+  }
+  env.ctx.__androidExportJson(rawExport, 'vocabulary-ledger-2026-10-18.json');
+  assert.equal(env.exports[1].filename, 'vocabulary-ledger-2026-10-18.json');
+  assert.equal(JSON.parse(env.exports[1].raw).format, 'cet-vocabulary-ledger');
 
   // Test merging a web schemaVersion 1 backup
   const v1WebBackup = JSON.stringify({
