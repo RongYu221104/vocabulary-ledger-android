@@ -12,8 +12,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -60,23 +60,26 @@ public class OfflineStorageBridge {
     public synchronized String readStateJson() {
         File primary = new File(storageDir, STATE_FILE);
         String content = readValidJsonFile(primary);
-        if (content != null) {
-            return content;
-        }
         File backup = new File(storageDir, STATE_BAK_FILE);
-        content = readValidJsonFile(backup);
-        if (content != null) {
-            writeAtomicFile(primary, new File(storageDir, STATE_TMP_FILE), null, content);
-            return content;
-        }
+        boolean needsRepair = content == null;
+        if (content == null) content = readValidJsonFile(backup);
         if (sqlMirror != null) {
-            content = sqlMirror.read("primary");
-            if (isValidJsonEnvelope(content)) {
-                writeAtomicFile(primary, new File(storageDir, STATE_TMP_FILE), null, content);
-                return content;
+            String mirrored = sqlMirror.read("primary");
+            if (isValidJsonEnvelope(mirrored) && (content == null || savedAt(mirrored).compareTo(savedAt(content)) > 0)) {
+                content = mirrored;
+                needsRepair = true;
             }
         }
-        return "";
+        if (content == null) return "";
+        if (needsRepair) writeAtomicFile(primary, new File(storageDir, STATE_TMP_FILE), null, content);
+        return content;
+    }
+
+    // JS writes UTC ISO savedAt. Legacy undated files keep their old primary/backup priority.
+    private static final Pattern SAVED_AT = Pattern.compile("\"savedAt\"\\s*:\\s*\"(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z)\"");
+    private static String savedAt(String json) {
+        Matcher match = SAVED_AT.matcher(json);
+        return match.find() ? match.group(1) : "";
     }
 
     @JavascriptInterface
@@ -172,16 +175,19 @@ public class OfflineStorageBridge {
             }
             if (bak != null && target.exists() && target.length() > 0) {
                 try {
-                    Files.copy(target.toPath(), bak.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    try (FileInputStream input = new FileInputStream(target); FileOutputStream output = new FileOutputStream(bak, false)) {
+                        byte[] buffer = new byte[32768];
+                        int count;
+                        while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
+                        output.flush();
+                        output.getFD().sync();
+                    }
                 } catch (IOException ignored) {
                 }
             }
-            try {
-                Files.move(tmp.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-            } catch (IOException moveErr) {
-                Files.move(tmp.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            }
-            return true;
+            // Same-directory rename uses the local filesystem's atomic replace and works on API 22+.
+            // Never delete the old primary to make a failed replacement succeed.
+            return tmp.renameTo(target);
         } catch (IOException e) {
             return false;
         }

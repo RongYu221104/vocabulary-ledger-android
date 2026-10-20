@@ -9,3 +9,14 @@ android/local.properties
 android/.idea/
 android/*.iml
 releases/*.apk
+.signing/
+.runtime/
+qa/
+*.jks
+*.keystore
+*.p12
+*.dpapi
+android/keystore.properties
+
+.env*
+*.log

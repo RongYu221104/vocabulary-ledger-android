@@ -303,11 +303,19 @@
     try {
       const envelope = buildCurrentEnvelope();
       const raw = JSON.stringify(envelope);
-      nativeWriteStateSync(raw);
-      idbWriteState(raw);
+      const nativeOk = nativeWriteStateSync(raw);
+      idbWriteState(raw).then(idbOk => {
+        if (!nativeOk && !idbOk) reportPersistenceFailure();
+      }).catch(() => { if (!nativeOk) reportPersistenceFailure(); });
     } catch (err) {
       console.warn('[AndroidOffline] Background persist warning:', err);
+      reportPersistenceFailure();
     }
+  }
+
+  function reportPersistenceFailure() {
+    appBridge?.feedback?.('复习进度尚未保存到本机，请检查剩余存储空间并导出 JSON 备份；当前页面仍保留进度。', true);
+    appBridge?.status?.('本机保存失败 · 请导出备份');
   }
 
   // Replace SessionGate so it never touches network /api/session
@@ -540,7 +548,7 @@
     body.className = 'offline-notice-body';
     const pMain = document.createElement('p');
     pMain.id = 'offline-notice-feature';
-    pMain.textContent = '当前为独立安装的 Android 离线版，无需联网即可完整使用全部账本管理、词条录入、卡片背诵与 FSRS 智能复习功能。';
+    pMain.textContent = '当前为独立安装的 Android 离线版，无需联网即可完整使用全部账本管理、词条录入、卡片背诵与遗忘曲线智能复习功能。';
     const pSub = document.createElement('p');
     pSub.textContent = '所有账本、词条及复习记录均自动持久保存在手机本地存储中。如需跨设备迁移或备份，请使用顶部「导出 JSON」与「导入恢复」。';
     const badge = document.createElement('span');

@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f5f2eb">
+  <meta name="description" content="免费游客词汇账本与 ChatGPT 个人云端账本，支持双语例句和 JSON 备份。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <title>Vocabulary Ledger · 词汇账本</title>
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/styles.css">
+  <script defer src="js/model.js"></script>
+  <script defer src="js/order.js"></script>
+  <script defer src="js/flashcards.js"></script>
+  <script defer src="js/groups.js"></script>
+  <script defer src="js/curve.js"></script>
+  <script defer src="js/review-preference.js"></script>
+  <script defer src="js/review.js"></script>
+  <script defer src="js/review-ui.js"></script>
+  <script defer src="js/storage.js"></script>
+  <script defer src="js/sharing.js"></script>
+  <script defer src="js/avatars.js"></script>
+  <script defer src="js/community.js"></script>
+  <script defer src="js/official.js"></script>
+  <script defer src="js/official-ui.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body>
+  <dialog id="identity-guard" class="identity-guard" aria-labelledby="identity-guard-title" aria-describedby="identity-guard-message" hidden>
+    <div class="guard-sheet">
+      <svg class="art guard-art" viewBox="0 0 260 190" aria-hidden="true" focusable="false"><path class="guard-ground" d="M44 82c12-38 72-58 126-46 48 10 72 48 58 88-14 38-70 54-122 44C58 158 30 120 44 82z"/><path class="art-ink art-thin guard-trace" d="M39.6 77.4c13-36 72-55 124.6-43.4"/><g class="guard-tone"><circle cx="196" cy="150" r="1.5"/><circle cx="203" cy="150" r="1.5"/><circle cx="210" cy="150" r="1.5"/><circle cx="199.5" cy="156" r="1.5"/><circle cx="206.5" cy="156" r="1.5"/><circle cx="203" cy="144" r="1.5"/><circle cx="52" cy="58" r="1.3"/><circle cx="58" cy="53" r="1.1"/><circle cx="47" cy="64" r="1"/></g><g class="guard-book"><path class="art-paper art-ink" d="M78 64c4 26 4 56-.4 86 2.8 1 5.4 1.2 8 .4l-.2-86c-2.6-.8-5-.8-7.4-.4z"/><path class="art-paper art-ink" d="M84 61c30-2.6 60-3 90-1.4 2 28 2.4 58 .8 88.6-30 2-60 2.2-90.4.4-1.8-29-1.8-58-.4-87.6z"/><path class="art-ink art-thin" d="M92 150.6c26 1.6 52 1.4 80-.6M95 154.4c24 1.2 48 1 72-.6"/><path class="guard-ribbon" d="M152 59.4c.8 32-.2 64 1.2 99.6l5.6-6.4 5.6 6.6c-1.4-34-.2-66-1-99.8z"/><path class="art-ink art-thin" d="M150.4 60c.8 32-.2 64 1.2 99.6l5.6-6.4 5.6 6.6c-1.4-34-.2-66-1-99.8"/><path class="art-ink art-thin" d="M98 76c9-.8 18-1 27-.6M98 84c6-.5 12-.6 18-.4"/></g><g class="guard-seal"><path class="art-clay" d="M117.2 92.4c7-6.2 19.4-5 24 2.6 4.4 7.2 1.6 17.6-6 21.4-7.8 3.8-18.2 1.2-21.6-6.2-2.6-5.8-1.4-13.4 3.6-17.8z"/><path class="art-ink art-thin" d="M115.2 90.6c7-6.2 19.4-5 24 2.6"/><path class="guard-key" d="M128.6 97.4c2.4 0 4 1.8 3.8 3.8-.1 1.4-.9 2.4-2 3l1.6 7.6h-6.8l1.6-7.6c-1.2-.6-2-1.8-2-3.2.1-2 1.6-3.6 3.8-3.6z"/></g><path class="guard-thread" d="M140.6 108.8c14 6.6 27 5.4 35.4-4.6 6.4-7.6 3-17.6-5.6-16.4-8.6 1.2-7.4 13.4 2.4 18 13.8 6.4 30.6-1 44.6-11.6" pathLength="100"/><path class="guard-break" d="M199 101.6l7-4.6" /><path class="guard-seed" d="M219.6 89.4c3.2-2.6 8.4-1.8 9.6 2 1 3.4-1.4 6.8-5 7-3.8.2-6.6-2.8-6.2-6 .2-1.2.6-2.2 1.6-3z"/><g class="guard-dots"><circle cx="216" cy="117" r="2.1"/><circle cx="224" cy="117" r="2.1"/><circle cx="232" cy="117" r="2.1"/></g><path class="art-ink art-thin" d="M30 170c66 3 136 3 202-1"/></svg>
+      <p class="kicker" lang="en">Privacy</p><h2 id="identity-guard-title">正在确认登录状态</h2><p id="identity-guard-message" role="status">离开较久，暂时收起私人内容。确认后会恢复原位置和输入。</p><button id="identity-retry" type="button" class="primary" hidden>重新验证</button>
+    </div>
+  </dialog>
+  <a class="skip-link" href="#workspace">跳到词条区域</a>
+  <header class="app-header">
+    <div class="masthead-rail">
+      <div class="rail-status">
+        <p class="eyebrow">词汇账本 <span id="mode-label">游客模式</span></p>
+        <p id="sync-state" class="sync-state" data-state="guest"><svg class="cloud-mark cloud-mark-mini" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g class="cm-drift"><path class="cm-line" d="M5 8C9 6 11 13 12 12S17 5 19 7" pathLength="100"/><path class="cm-line" d="M12 12c1 3-3 5-5 7" pathLength="100"/><path class="cm-flow cm-f1" d="M5 8C9 6 11 13 12 12S17 5 19 7" pathLength="100"/><path class="cm-flow cm-f2" d="M12 12c1 3-3 5-5 7" pathLength="100"/><circle class="cm-node cm-n1" cx="5" cy="8" r="2.4"/><circle class="cm-node cm-n2" cx="19" cy="7" r="2.4"/><circle class="cm-node cm-n3" cx="12" cy="12" r="2.4"/><circle class="cm-node cm-n4" cx="7" cy="19" r="2.4"/></g></svg><span class="status-dot" aria-hidden="true"></span><svg class="save-tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.6 8.6c1.6 1.1 2.8 2.4 3.8 3.9 2-3.7 4.3-6.6 7-8.9" pathLength="100"/></svg><span id="save-status" role="status">游客账本 · 仅当前页面内存</span></p>
+        <button id="reload-button" type="button" class="quiet tool reload" aria-label="重新读取账本" aria-describedby="reload-tip" hidden><svg class="hi reload-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M10.3 10.2l3.3-.5.4 3.3-3.4.4z"/><path class="hi-ink" d="M19.3 11.4c.2 4.2-3.1 7.7-7.3 7.8-4.1.1-7.4-3.1-7.5-7.1-.1-4 3.1-7.2 7-7.3 2.3-.1 4.3.8 5.7 2.4"/><path class="hi-ink" d="M18.3 3.7c0 1.4-.1 2.8-.3 4.2-1.4 0-2.8-.1-4.2-.3"/></svg><span class="tool-text">重新读取</span><span id="reload-tip" class="act-tip" role="tooltip">从云端读取最新记录 · 未提交输入会保留</span></button>
+      </div>
+      <div class="header-actions">
+        <div class="library-tools" role="group" aria-label="官方词库"><button id="official-open" type="button" class="quiet tool official-open" aria-haspopup="dialog" aria-controls="official-dialog"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M15.4 13.6c1.9-1.3 4.7-.5 5.1 1.8.4 2.1-1.2 3.9-3.3 3.9-2 0-3.5-1.5-3.3-3.4.1-.9.7-1.8 1.5-2.3z"/><path class="hi-ink" d="M4.8 4.3c3.2-.3 6.4-.3 9.6 0 .2 4.8.2 9.6 0 14.4-3.2.3-6.4.3-9.6 0-.2-4.8-.2-9.6 0-14.4z"/><path class="hi-ink hi-thin" d="M7.8 4.5c-.1 4.7-.1 9.4.1 14.1M10.4 8.3c1.1-.1 2.1-.1 3 0M10.4 11c.8-.1 1.6-.1 2.3 0"/><path class="hi-ink" d="M17.6 13.3c1.7 0 3 1.3 2.9 2.9-.1 1.5-1.4 2.7-3 2.6-1.5-.1-2.6-1.3-2.6-2.8.1-1.5 1.3-2.7 2.7-2.7z"/></svg><span>官方<span class="tool-long">词汇</span>账本</span></button></div>
+        <div class="account-tools" role="group" aria-label="账号">
+          <button id="account-name" type="button" class="account-name quiet" aria-haspopup="dialog" aria-controls="community-dialog" disabled>游客 · 未登录</button>
+          <button id="community-open" type="button" class="quiet tool community-open" aria-haspopup="dialog" aria-controls="community-dialog"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M14.2 8.6c2.3-1.3 5.3-.3 5.8 2.1.5 2.4-1.3 4.6-3.8 4.6-2.3 0-4-1.7-3.8-3.8.1-1.3.8-2.4 1.8-2.9z"/><path class="hi-ink" d="M9 4.6c2.7-.2 4.8 1.8 4.8 4.4 0 2.5-1.9 4.4-4.6 4.4-2.5 0-4.4-1.9-4.4-4.4 0-2.3 1.9-4.2 4.2-4.4z"/><path class="hi-ink" d="M3.6 19.6c1.3-2.7 3.2-4 5.6-4s4.3 1.3 5.6 4"/><path class="hi-ink hi-thin" d="M15.6 15.8c2.3-.2 4.1.9 5 3.2"/></svg>社区</button>
+          <a id="sign-in" class="tool-link" href="/signin-with-chatgpt?return_to=/ledger.html" target="_top" lang="en">Sign in with ChatGPT</a>
+          <a id="sign-out" class="tool-link" href="/signout-with-chatgpt?return_to=/ledger.html" target="_top" lang="en" hidden>Sign out</a>
+        </div>
+        <div class="backup-actions" role="group" aria-label="JSON 备份">
+          <button id="export-button" type="button" class="quiet tool" aria-label="导出 JSON"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M7.9 3.6l7.9-.4.3 7.6-8 .4z"/><path class="hi-ink" d="M4.3 14.4c-.1 1.9 0 3.7.2 5.1 5 .4 10.1.4 15.1 0 .2-1.5.3-3.2.2-5"/><path class="hi-ink" d="M11.9 5.3c-.1 3.2 0 6.3.2 9.3"/><path class="hi-ink" d="M8.5 11.6c1.3 1.1 2.4 2.3 3.6 3.5 1.1-1.3 2.2-2.4 3.4-3.6"/></svg><span>导出<span class="tool-long"> JSON</span></span></button>
+          <button id="import-button" type="button" class="quiet tool" aria-label="导入恢复"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M6.1 16.2l11.8-.3-.1 2.2-11.6.3z"/><path class="hi-ink" d="M4.3 14.4c-.1 1.9 0 3.7.2 5.1 5 .4 10.1.4 15.1 0 .2-1.5.3-3.2.2-5"/><path class="hi-ink" d="M12.1 14.6c-.2-3.2-.2-6.3 0-9.5"/><path class="hi-ink" d="M8.6 8.6c1.2-1.2 2.3-2.4 3.4-3.7 1.2 1.3 2.3 2.5 3.6 3.6"/></svg><span>导入<span class="tool-long">恢复</span></span></button>
+          <input id="import-file" type="file" accept=".json,application/json" hidden>
+        </div>
+      </div>
+    </div>
+    <div class="masthead-body">
+      <div class="brand">
+        <h1 lang="en"><span>Vocabulary</span> <span>Ledger<span class="title-rule" aria-hidden="true"></span><svg class="art title-doodle" viewBox="0 0 64 28" aria-hidden="true" focusable="false"><path class="art-ink art-draw" d="M1 15.2c7.8-.9 13.9-.8 19.6.2 5.4.9 8.7-2.6 7.9-6.4-.8-3.7-5.9-3.9-6.9-.2-1.3 4.8 3.4 9.8 10.6 9.9 6 .1 10.3-2.7 14-5.9" pathLength="100"/><path class="art-clay art-pop" d="M50.6 6.6c3.1-1.7 7.4-.6 8.5 2.5 1 2.9-.9 6.1-4.1 6.7-3.1.6-6.1-1.2-6.4-4.1-.2-2 .4-4 2-5.1z"/><path class="art-ink art-thin art-trace" d="M49.2 7.9c3.1-1.7 7.4-.6 8.5 2.5 1 2.9-.9 6.1-4.1 6.7-3.1.6-6.1-1.2-6.4-4.1-.2-2 .4-4 2-5.1z" pathLength="100"/><circle class="art-dot" cx="61" cy="21" r="1.3"/><circle class="art-dot" cx="57.4" cy="23.6" r="1"/></svg></span></h1>
+        <div class="review-entry">
+          <button id="review-open" type="button" class="review-open" aria-haspopup="dialog" aria-controls="review-dialog" aria-describedby="review-meta"><svg class="hi review-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M7.4 6.2c1-.8 2.6-.4 2.8.9.2 1.2-.8 2.1-2 2-1.1-.1-1.6-1.3-.8-2.9zM14 8.6c.9-.6 2.2-.2 2.3.9.1 1-.7 1.7-1.7 1.6-.9 0-1.3-1-.6-2.5z"/><path class="hi-ink" d="M3.4 4.6c1.2 4.6 2.6 7.4 4.8 8.6M8.6 7.2c1.8 3.8 3.8 5.8 6.6 6.6M15.4 9.6c1.6 2.6 3.4 3.8 5.2 4.2"/><path class="hi-ink hi-thin" d="M3.2 19.2c5.8.3 11.6.3 17.6-.2"/></svg><span class="review-open-text">智能复习</span><span id="review-badge" class="review-badge" hidden></span></button>
+          <p id="review-meta" class="review-meta">按遗忘曲线安排每天该背的词</p>
+        </div>
+        <p id="guest-notice" class="mode-notice">游客账本不保存：刷新或关闭页面即清空，请及时导出 JSON 备份。</p>
+      </div>
+      <div class="search-global" role="search">
+        <label for="global-search" class="search-label">全局搜索 <span lang="en">All ledgers</span></label>
+        <div class="search-field"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M6.6 6.2c2.2-1.6 5.7-1.4 7 .6 1.2 1.9.2 4.6-1.9 5.8-2.3 1.3-5.4.9-6.4-1.1-.8-1.7-.4-4.1 1.3-5.3z"/><path class="hi-ink" d="M10.5 3.9c3.4-.2 6.2 2.4 6.1 5.8-.1 3.4-2.9 5.9-6.3 5.8-3.3-.1-5.9-2.8-5.8-6 .1-3 2.8-5.4 6-5.6z"/><path class="hi-ink" d="M15 14.7c1.6 1.4 3.2 3 4.9 4.9"/></svg><input id="global-search" type="search" maxlength="4000" placeholder="跨账本查找单词、释义或例句"><button id="clear-global" type="button" class="clear-global" aria-label="清除全局搜索，返回当前账本" hidden><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-ink" d="M7 7.3c3.4 3.1 6.6 6.4 10 9.9M16.8 7c-3.1 3.5-6.4 6.8-9.9 10"/></svg><span class="clear-text">返回账本</span></button></div>
+      </div>
+      <dl id="global-stats" class="stats stats-global" aria-label="全局统计"></dl>
+    </div>
+  </header>
+  <div id="storage-warning" class="storage-warning" role="alert" hidden><p id="storage-message"></p><p>输入已保留。点击“重新读取账本”获取最新记录，核对后再保存。</p></div>
+  <p id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+  <main class="app-layout">
+    <aside class="tag-panel" aria-label="词汇账本">
+      <div class="panel-heading">
+        <div><p class="kicker" lang="en">Vocabulary Ledger</p><h2>词汇账本</h2></div>
+        <button id="new-tag" type="button" class="new-tag"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M4.6 7.1c2.2-.4 4.4-.2 6.4.9l-.1 9.1c-2-.9-4.1-1.1-6.3-.8z"/><path class="hi-ink" d="M3.6 6.2c2.9-.7 5.7-.4 8.4 1.2 2.7-1.6 5.5-1.9 8.4-1.2l-.2 11.6c-2.9-.6-5.6-.3-8.2 1.2-2.6-1.5-5.3-1.8-8.2-1.2z"/><path class="hi-ink" d="M12 7.4c0 3.8 0 7.6.1 11.4"/><path class="hi-ink hi-thin" d="M16.1 9.5c0 1.6 0 3.1.1 4.7M13.8 11.9c1.5-.1 3.1-.1 4.6 0"/></svg>新增账本</button>
+      </div>
+      <div class="sharing-tools" role="group" aria-label="账本分享"><button id="sharing-open" type="button" class="quiet tool" aria-haspopup="dialog" aria-controls="sharing-dialog">分享账本</button><button id="sharing-manage" type="button" class="quiet tool" aria-haspopup="dialog" aria-controls="sharing-dialog">分享管理</button></div>
+      <div id="tag-list"></div>
+      <svg id="ledger-ribbon" class="art ledger-ribbon" viewBox="0 0 60 92" aria-hidden="true" focusable="false"><path class="art-clay" d="M25.6 1.2c1.2 11.4-1.6 21.8.3 32.6 1.6 9.6-.9 18.8-.4 30.4l6.8-6.4 6.9 6.6c-.6-12.8 1.6-21.4-.1-31.4-1.8-10.4.8-20.6-.4-31.6z"/><path class="art-ink art-thin" d="M23.6 3c1.2 11.4-1.6 21.8.3 32.6 1.6 9.6-.9 18.8-.4 30.4l6.8-6.4 6.9 6.6c-.6-12.8 1.6-21.4-.1-31.4-1.8-10.4.8-20.6-.4-31.6"/><path class="art-ink art-thin" d="M14.4 1.4c9.8.6 20.8.4 31.4-.6"/><circle class="art-dot" cx="44" cy="70" r="1.2"/><circle class="art-dot" cx="47.6" cy="74.6" r="1.2"/><circle class="art-dot" cx="42.6" cy="77" r="1.2"/></svg>
+    </aside>
+    <section id="workspace" class="word-panel" tabindex="-1" aria-label="词条区域">
+      <div id="ledger-bar" class="ledger-sheet ledger-bar" hidden>
+        <!-- The head scrolls away; the dock below it stays under the viewport top. Its sticky `top` is minus the head's
+             height (js/app.js), so sticking changes no size and no layout: no spacer, no fold, no jump. -->
+        <div id="bar-head" class="bar-head">
+          <div class="current-title">
+            <p id="current-date" class="current-date"></p>
+            <div class="title-line"><h2 id="current-name"></h2><span class="title-tools heading-actions"><button id="edit-tag" type="button" class="quiet bar-icon" aria-label="编辑账本"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M5.3 18.7l.8-3.5 2.7 2.7z"/><path class="hi-ink" d="M5.3 18.7l.8-3.5 9.6-9.6c.8-.8 2-.8 2.8 0l.1.1c.8.8.8 2 0 2.8l-9.6 9.5z"/><path class="hi-ink hi-thin" d="M13.9 7.4l2.9 2.9"/></svg><span class="bar-icon-text">编辑</span></button><button id="delete-tag" type="button" class="quiet danger bar-icon" aria-label="删除账本"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-ink" d="M6.6 6.9c3.6 3.3 7 6.8 10.6 10.5M17.2 6.6c-3.3 3.7-6.8 7.2-10.4 10.6"/></svg><span class="bar-icon-text">删除</span></button></span><span id="master-tools" class="master-tools" hidden><button id="add-sub" type="button" class="quiet add-sub"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M9.7 9.6l4.6-.4.3 4.7-4.7.3z"/><path class="hi-ink" d="M12 5.2c-.1 4.6 0 9.1.1 13.6M5.3 12.1c4.5-.2 9-.2 13.5 0"/></svg><span>子账本</span></button><button id="groups-manage" type="button" class="quiet groups-manage" aria-haspopup="dialog" aria-controls="groups-dialog"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M13.6 13.4l6-.3.2 5.6-6 .3z"/><path class="hi-ink" d="M4.4 5.2c2.2-.2 4.4-.2 6.6 0l.1 5.6c-2.2.2-4.4.2-6.6 0zM13.2 5.1c2.2-.2 4.4-.2 6.6 0l.1 5.6c-2.2.2-4.4.2-6.6 0zM4.5 13.4c2.2-.2 4.4-.2 6.6 0l.1 5.6c-2.2.2-4.4.2-6.6 0z"/><path class="hi-ink hi-thin" d="M14.4 16.2c1.4 0 2.8 0 4.2.1"/></svg><span>分组</span></button></span></div>
+            <p id="current-origin" class="ledger-origin" hidden></p><p id="current-scope" class="current-scope" hidden></p>
+            <div class="progress-block">
+              <div id="current-progress" class="progress" role="progressbar" aria-label="当前账本掌握进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="current-progress-fill" class="progress-fill"></span></div>
+              <dl id="current-stats" class="stats stats-current" aria-label="当前账本统计"></dl>
+            </div>
+          </div>
+        </div>
+        <div id="bar-dock" class="bar-dock">
+          <div id="sub-picker" class="sub-picker" role="group" aria-label="按分组筛选子账本" hidden></div>
+          <div id="bar-tools" class="bar-tools filters">
+            <div id="local-search-wrap" class="filter-search"><label for="local-search" class="sr-only">在本账本中搜索</label><div class="search-field"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M6.6 6.2c2.2-1.6 5.7-1.4 7 .6 1.2 1.9.2 4.6-1.9 5.8-2.3 1.3-5.4.9-6.4-1.1-.8-1.7-.4-4.1 1.3-5.3z"/><path class="hi-ink" d="M10.5 3.9c3.4-.2 6.2 2.4 6.1 5.8-.1 3.4-2.9 5.9-6.3 5.8-3.3-.1-5.9-2.8-5.8-6 .1-3 2.8-5.4 6-5.6z"/><path class="hi-ink" d="M15 14.7c1.6 1.4 3.2 3 4.9 4.9"/></svg><input id="local-search" type="search" maxlength="4000" placeholder="在本账本中搜索"></div></div>
+            <button id="facet-open" type="button" class="quiet bar-icon facet-open" aria-haspopup="dialog" aria-controls="facet-sheet" hidden><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M9.6 12.4l4.6-.2-.4 5.8-3.8 1.4z"/><path class="hi-ink" d="M4.2 5.4c5.2-.4 10.4-.4 15.6 0-2.2 2.6-4.2 5-6 7.4l-.2 5.8-3.6 1.6-.2-7.4C8.2 10.4 6.2 8 4.2 5.4z"/></svg><span class="bar-icon-text">筛选</span><span id="facet-badge" class="facet-badge" hidden></span></button>
+            <div id="bar-more" class="bar-more">
+              <div class="filter-sort"><label for="sort-order" class="sr-only">排序</label><div class="sort-field"><select id="sort-order"><option value="asc">正序 · 最早录入</option><option value="desc">倒序 · 最新录入</option><option value="az">A–Z</option><option value="za">Z–A</option><option value="shuffle">乱序</option></select><button id="reshuffle" type="button" class="quiet reshuffle" aria-label="再次洗牌" aria-describedby="reshuffle-tip" hidden><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M10.5 10.9l2.2-.3.3 2.2-2.2.3z"/><path class="hi-ink" d="M3.5 7.3c3.7-.2 5.8.6 7.6 4.4 1.9 4 4.1 5.4 8.3 5.2M3.6 16.8c3.3.2 5.2-.4 6.5-2.3M13.7 9.4c1.4-1.8 3.4-2.5 5.9-2.3"/><path class="hi-ink" d="M17.3 4.7c.9.8 1.7 1.6 2.5 2.5-.8.8-1.7 1.5-2.6 2.2M17.2 14.6c.9.7 1.8 1.5 2.6 2.3-.8.9-1.6 1.7-2.5 2.5"/></svg><span id="reshuffle-tip" class="act-tip" role="tooltip">再次洗牌</span></button></div></div>
+          <div class="filter-status"><label for="status-filter" class="sr-only">掌握状态</label><select id="status-filter"><option value="all">全部状态</option><option value="unmastered">未掌握</option><option value="mastered">已掌握</option></select></div>
+            </div>
+            <button id="bar-tools-toggle" type="button" class="quiet bar-icon tools-toggle" aria-label="排序与掌握状态" aria-expanded="false" aria-controls="bar-more"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M13.4 14.2l4.6-.2.2 4.2-4.6.2z"/><path class="hi-ink" d="M7.6 4.6c-.1 4.8 0 9.6.1 14.6M4.4 15.8c1.1 1.2 2.2 2.3 3.3 3.5 1.1-1.2 2.2-2.4 3.4-3.4M16.4 19.4c.1-4.8 0-9.6-.1-14.6M13 8.2c1.1-1.2 2.2-2.4 3.3-3.6 1.1 1.2 2.3 2.3 3.4 3.4"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div id="tag-content" class="tag-content" hidden>
+        <div id="sub-empty" class="sub-empty" hidden><p id="sub-empty-text"></p><button id="sub-empty-create" type="button" class="primary small"></button></div>
+        <section id="composer" class="composer" aria-labelledby="composer-label">
+          <div class="composer-bar">
+            <h3 class="composer-heading"><button id="composer-toggle" type="button" class="composer-toggle" aria-expanded="false" aria-controls="add-form"><span class="composer-sign" aria-hidden="true"><svg class="hi" viewBox="0 0 24 24" focusable="false"><path class="hi-acc" d="M5.4 17.7l.7-3 2.3 2.3z"/><path class="hi-ink" d="M5.4 17.7l.8-3.4 8.7-8.7c.9-.9 2.3-.9 3.2 0l.1.1c.9.9.9 2.3 0 3.2l-8.7 8.6z"/><path class="hi-ink hi-thin" d="M12.8 20.3c2.4-.2 4.8-.2 7.2 0"/></svg></span><span id="composer-label" class="composer-title">录入词条</span><span id="composer-draft" class="composer-draft" hidden>有未提交内容</span><span class="composer-state" aria-hidden="true"><svg class="hi state-chevron" viewBox="0 0 24 24" focusable="false"><path class="hi-ink" d="M6.4 9.6c1.9 1.7 3.8 3.5 5.7 5.4 1.8-1.9 3.7-3.7 5.6-5.5"/></svg></span></button></h3>
+            <div class="composer-actions">
+              <span class="tip-wrap composer-help"><button type="button" class="help-tip" aria-label="键盘快捷键" aria-expanded="false" aria-describedby="composer-tip">?</button><span id="composer-tip" role="tooltip" class="tip"><kbd>Enter</kbd> 跳到释义 · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> 添加 · <kbd>Ctrl</kbd>+<kbd>B</kbd> 加粗例句<br><kbd>/</kbd> 搜索本账本 · 搜索框中 <kbd>Esc</kbd> 清空</span></span>
+              <button id="add-word" type="submit" form="add-form" class="add-button"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M7.2 6.9l9.7-.4.3 9.9-9.8.3z"/><path class="hi-ink" d="M12.1 5.2c-.1 4.6 0 9.1.1 13.7M5.3 12.1c4.5-.2 9-.2 13.5 0"/></svg><span>添加<span class="add-long">词条</span></span></button>
+            </div>
+          </div>
+          <form id="add-form" class="add-form" novalidate hidden>
+            <div id="composer-target-wrap" class="composer-target" hidden><label for="composer-target">录入到</label><select id="composer-target"></select></div>
+            <div class="composer-fields">
+              <div class="composer-field field-english"><label class="sr-only" for="word-input">英文单词或短语</label><input id="word-input" name="english" maxlength="200" required autocomplete="off" spellcheck="false" lang="en" placeholder="英文单词或短语"></div>
+              <div class="composer-field field-meaning"><label class="sr-only" for="meaning-input">中文释义</label><textarea id="meaning-input" name="meaning" maxlength="4000" required rows="1" data-autosize placeholder="中文释义"></textarea></div>
+              <div class="composer-field field-example has-bold"><label class="sr-only" for="word-example">英文例句（可选）</label><textarea id="word-example" maxlength="12000" rows="1" lang="en" data-autosize placeholder="英文例句"></textarea><button type="button" class="bold-button" data-bold="word-example" aria-label="加粗所选英文例句文字" aria-keyshortcuts="Control+B" title="加粗 / 取消加粗（Ctrl+B）"><b aria-hidden="true">B</b></button><p class="rich-preview" data-preview="word-example" aria-hidden="true" hidden></p></div>
+              <div class="composer-field field-translation has-bold"><label class="sr-only" for="word-translation">例句中文翻译（可选）</label><textarea id="word-translation" maxlength="12000" rows="1" data-autosize placeholder="例句中文翻译"></textarea><button type="button" class="bold-button" data-bold="word-translation" aria-label="加粗所选例句中文翻译文字" aria-keyshortcuts="Control+B" title="加粗 / 取消加粗（Ctrl+B）"><b aria-hidden="true">B</b></button><p class="rich-preview" data-preview="word-translation" aria-hidden="true" hidden></p></div>
+              <div class="composer-field field-note"><label class="sr-only" for="word-note">备注（可选）</label><textarea id="word-note" name="note" maxlength="4000" rows="1" data-autosize placeholder="备注：派生词、词根词缀、记忆法…"></textarea></div>
+            </div>
+          </form>
+        </section>
+      </div>
+      <div id="cloud-loading" class="cloud-loading" data-state="loading" hidden>
+        <svg class="cloud-mark cloud-mark-full" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><g class="cm-drift"><path class="cm-line" d="M28 38C40 30 46 58 58 58" pathLength="100"/><path class="cm-line" d="M58 58C70 58 66 26 84 28" pathLength="100"/><path class="cm-line" d="M84 28C100 32 102 60 92 72" pathLength="100"/><path class="cm-line" d="M92 72C84 86 66 98 52 92" pathLength="100"/><path class="cm-line" d="M58 58C54 70 60 80 52 92" pathLength="100"/><path class="cm-flow cm-f1" d="M28 38C40 30 46 58 58 58" pathLength="100"/><path class="cm-flow cm-f2" d="M58 58C70 58 66 26 84 28" pathLength="100"/><path class="cm-flow cm-f3" d="M84 28C100 32 102 60 92 72" pathLength="100"/><path class="cm-flow cm-f4" d="M92 72C84 86 66 98 52 92" pathLength="100"/><path class="cm-flow cm-f5" d="M58 58C54 70 60 80 52 92" pathLength="100"/><circle class="cm-node cm-n1" cx="28" cy="38" r="7"/><circle class="cm-node cm-n2" cx="84" cy="28" r="6"/><circle class="cm-node cm-n3" cx="92" cy="72" r="6.5"/><circle class="cm-node cm-n4" cx="52" cy="92" r="6"/><circle class="cm-node cm-n5 cm-core" cx="58" cy="58" r="8.5"/></g></svg>
+        <div class="cloud-loading-text"><p id="cloud-loading-title" class="cloud-loading-title" role="status" aria-live="polite">正在连接你的云端账本</p><p id="cloud-loading-hint" class="hint">词条读取完成后会自动显示，请稍候。</p><button id="loading-retry" type="button" class="primary small" hidden>重新读取账本</button></div>
+      </div>
+      <div id="welcome" class="empty empty-welcome">
+        <svg class="art empty-art" viewBox="0 0 220 132" width="220" height="132" aria-hidden="true" focusable="false"><path class="art-clay art-pop" d="M29.4 30.6c18.2-10.4 46.1-8.3 61.9 1.7 8.3 5.2 9.1 22.3 6.2 40.3-3.2 20.2-12.3 34.1-30.5 36.1-20.3 2.1-40.2-6.1-44.3-24.2-4.1-18.4-8-44.1 6.7-53.9z"/><path class="art-paper art-ink" d="M38.2 34.4c16.3-2.1 32.7-.9 48.1 4l-.8 66.1c-15.4-4.9-31.2-6.2-47.3-3.9z"/><path class="art-paper art-ink" d="M86.3 38.4c15.2-5 31.9-6.1 49.4-3.9l.9 66.2c-17.4-2.3-34.1-1.1-51.1 3.8z"/><path class="art-ink art-thin art-draw d1" d="M46.4 50.2c8.8-1.3 18.2-1 27.9.9" pathLength="100"/><path class="art-ink art-thin art-draw d2" d="M46.6 60.6c6.6-.7 13.3-.6 20.1.6" pathLength="100"/><path class="art-ink art-thin art-draw d3" d="M46.4 71.2c8.5-1.1 16.4-1 24.2.3" pathLength="100"/><path class="art-solid" d="M95.6 51.3l25.8-.9.4 7.3-25.9.8z"/><path class="art-ink art-draw d4" d="M97.6 83.6c10.3-1.1 20.3-3.1 30.3-9.2 10.1-6.2 18-19.9 28.1-29.6 8.1-7.8 20.1-9.7 24.1-2 3.4 6.8-4 13.1-10.2 10-6.1-3-3-12 4.1-16.1 5.3-3 11.2-4 16.1-3.1" pathLength="100"/><path class="art-clay art-pop p2" d="M193.2 26.8c3.2-3.9 9.4-3.6 11.2.6 1.8 4.2-1.3 8.4-5.4 8.2-4.3-.2-7.4-4.6-5.8-8.8z"/><path class="art-ink art-thin" d="M191.6 28.4c3.2-3.9 9.4-3.6 11.2.6 1.8 4.2-1.3 8.4-5.4 8.2-4.3-.2-7.4-4.6-5.8-8.8z"/><path class="art-ink art-thin" d="M22.6 116.2c40.4 2.9 110.3 3.1 176.2-1.2"/><g class="art-tone"><circle cx="150" cy="104" r="1.4"/><circle cx="156" cy="104" r="1.4"/><circle cx="162" cy="104" r="1.4"/><circle cx="153" cy="109" r="1.4"/><circle cx="159" cy="109" r="1.4"/><circle cx="165" cy="109" r="1.4"/><circle cx="156" cy="99" r="1.4"/><circle cx="162" cy="99" r="1.4"/></g></svg>
+        <h2>建立第一本词汇账本</h2>
+        <p>按真题年份与月份归入主账本，也可以自建主账本和「难度」「课程」等分组；一本子账本可以同时属于多个分组。</p>
+        <button id="welcome-new-tag" type="button" class="primary">新增第一本账本</button>
+      </div>
+      <div id="results-area" class="results-area" hidden>
+        <div class="result-heading"><h3 id="results-title">词条记录</h3><span id="result-count" class="hint result-count" aria-live="polite"></span></div>
+        <div id="word-list" class="word-list"></div>
+        <div class="pagination"><button id="page-prev" type="button" class="quiet">上一页</button><span id="page-info"></span><button id="page-next" type="button" class="quiet">下一页</button></div>
+      </div>
+    </section>
+  </main>
+  <template id="art-search"><svg class="art list-art" viewBox="0 0 72 44" aria-hidden="true" focusable="false"><path class="art-clay art-pop" d="M50.4 9.6c4.1-2.2 9.4-.2 10.2 4 .8 4.2-2.4 8-6.4 7.8-4.2-.2-7.1-2.6-6.8-6.2.2-2.6 1.2-4.4 3-5.6z"/><path class="art-ink art-draw" d="M24.2 7.8c9-1 16.1 6 15.2 14.1-.9 8-8.2 13.1-16.1 12.1-8.1-1-13.2-8.1-12.1-15.1 1-6.2 6.2-10.6 13-11.1z" pathLength="100"/><path class="art-ink art-draw d2" d="M36.2 31c3.1 3.2 6.1 6.1 9.2 9" pathLength="100"/><circle class="art-dot" cx="64" cy="27" r="1.2"/><circle class="art-dot" cx="60" cy="30" r="1.2"/></svg></template>
+  <template id="art-blank"><svg class="art list-art" viewBox="0 0 72 44" aria-hidden="true" focusable="false"><path class="art-ink art-thin" d="M6 36.4c20.2 1.1 40.1 1 60-.8"/><path class="art-clay art-pop" d="M9.6 23.6c3.1-3.2 8.2-2.2 9.1 1.7.8 3.4-1.9 6.3-5.2 6.1-3.6-.2-6.2-4.3-3.9-7.8z"/><path class="art-ink art-draw" d="M18.4 27.4c6.1-6.4 11.2 3.1 17.6-1.6 5.2-3.9 9.1-9.1 15.2-6.3" pathLength="100"/><path class="art-ink art-thin art-draw d2" d="M55.4 13.6l6.2-6.1M58.6 17.2l7.4-1.8" pathLength="100"/></svg></template>
+  <template id="art-commons"><svg class="art cm-art" viewBox="0 0 132 72" aria-hidden="true" focusable="false"><path class="art-clay art-pop" d="M20.6 20.4c8.8-6.2 23.2-5.4 30 1.6 5.6 5.8 4.6 18.6-1.4 25.6-6.4 7.4-19.6 9-27.6 3.4-7.6-5.4-9.6-24.4-1-30.6z"/><path class="art-paper art-ink" d="M18.2 22.8c7.4-1.4 15-1.2 22.2.8l-.6 30.4c-7.2-2-14.6-2.2-21.8-.8z"/><path class="art-ink art-thin art-draw d1" d="M23.2 31.2c4.2-.6 8.4-.5 12.6.3M23.4 37.6c3.2-.4 6.4-.3 9.6.3" pathLength="100"/><path class="art-paper art-ink" d="M84.6 25.2c7.2-2.2 14.8-2.6 22.4-1.4l.4 30.2c-7.6-1.2-15-.8-22.2 1.4z"/><path class="art-ink art-thin art-draw d2" d="M90.2 33.4c4-.8 8-1 12-.4M90.4 39.8c3-.6 6-.6 9-.2" pathLength="100"/><path class="art-ink art-draw d3" d="M40.6 34.2c8.6-4.2 14.4-1.6 17.2 3.4 2.4 4.4-1.6 8.6-5.4 6.4-3.6-2.2-1.4-8.4 4.8-10.8 8.2-3.2 18.4-1.4 27.2-3.4" pathLength="100"/><path class="art-clay art-pop p2" d="M114.2 14.4c2.4-2.6 6.8-2.2 7.8 1 1 3-1.4 5.8-4.4 5.6-3.2-.2-5.2-3.6-3.4-6.6z"/><path class="art-ink art-thin" d="M8.2 64.2c36-1.6 79.4-1.8 116.6.4"/><g class="art-tone"><circle cx="66" cy="58" r="1.3"/><circle cx="71" cy="58" r="1.3"/><circle cx="76" cy="58" r="1.3"/><circle cx="68.5" cy="53.6" r="1.3"/><circle cx="73.5" cy="53.6" r="1.3"/></g></svg></template>
+  <template id="art-closed"><svg class="art cm-art cm-art-small" viewBox="0 0 84 60" aria-hidden="true" focusable="false"><path class="art-clay art-pop" d="M19.6 15.6c10.4-6.4 28-5.6 36.4 2 6.8 6.2 5.6 20.4-1.6 27.6-7.6 7.6-23.4 8.8-32.4 2.6-8.6-6-12.6-26-2.4-32.2z"/><path class="art-paper art-ink" d="M23.4 12.6c9.8-.6 19.4-.4 28.8.6l-.8 33.4c-9.6-.8-19.2-1-28.6-.4z"/><path class="art-ink art-thin" d="M27.6 13c-.4 11.2-.4 22.2.2 33.4"/><path class="art-solid" d="M44.2 12.8l5.4-.2.2 15.4-2.8-2.6-2.8 2.8z"/><path class="art-ink art-thin art-draw d1" d="M34 24.6c4.4-.4 8.4-.4 11.6 0M34 30.4c3-.2 5.8-.2 8.4 0" pathLength="100"/><path class="art-ink art-thin" d="M8.4 54.6c22.4-1.2 46.6-1.2 68.4.4"/><circle class="art-dot" cx="66" cy="20" r="1.2"/><circle class="art-dot" cx="70" cy="23.6" r="1.2"/><circle class="art-dot" cx="65.4" cy="26" r="1.2"/></svg></template>
+  <template id="art-seal"><svg class="art cm-seal" viewBox="0 0 44 44" aria-hidden="true" focusable="false"><path class="art-clay art-pop" d="M12.2 9.6c6.4-4.4 17.6-3.6 22.4 2.4 4.4 5.4 3.4 15.8-2.6 20.6-6.4 5.2-17.4 4.8-22.2-1.4-4.4-5.8-4.6-17.4 2.4-21.6z"/><path class="art-ink art-thin" d="M10.6 8.2c6.4-4.4 17.6-3.6 22.4 2.4"/><path class="art-ink art-draw d2" d="M14.4 22.2c2.4 1.6 4.2 3.4 5.6 5.6 3-5.6 6.6-10 10.8-13.4" pathLength="100"/><circle class="art-dot" cx="38.6" cy="34" r="1.1"/><circle class="art-dot" cx="41" cy="30.4" r="1"/></svg></template>
+  <footer><svg class="art colophon" viewBox="0 0 44 18" aria-hidden="true" focusable="false"><path class="art-clay" d="M18.6 4.6c3.4-1.8 8-.4 8.6 3.4.6 3.8-2.8 6.2-6.4 5.8-3.4-.4-5.4-2.6-4.8-5.4.4-1.8 1.2-3 2.6-3.8z"/><path class="art-ink art-thin" d="M14.6 12.8c-3-5.2 1.6-10.6 7.8-10.6 5.8 0 9.6 4.4 7.6 8.6-1.8 3.8-7.8 5-11.8 2.8"/><circle class="art-dot" cx="5" cy="9" r="1.2"/><circle class="art-dot" cx="39" cy="9" r="1.2"/></svg>隐私与数据：游客词条仅在当前页面内存中；ChatGPT 登录后存入个人云端账本。<br>未公开账本仅你可见；社区只开放你勾选的账本，独立分享链接开放已选快照。请定期导出 JSON 备份。<br>Sites 可设置访问统计与安全 Cookie，不含词条内容。</footer>
+  <dialog id="editor-dialog" aria-labelledby="editor-title">
+    <form id="editor-form" novalidate>
+      <h2 id="editor-title"></h2>
+      <div id="tag-fields">
+        <div id="tag-kind" class="kind-switch" role="radiogroup" aria-label="新增的账本类型" hidden>
+          <button type="button" role="radio" data-kind="exam" aria-checked="true">真题子账本</button>
+          <button type="button" role="radio" data-kind="master" aria-checked="false" tabindex="-1">新建主账本</button>
+          <button type="button" role="radio" data-kind="plain" aria-checked="false" tabindex="-1">独立账本</button>
+        </div>
+        <div id="master-fields" class="master-fields" hidden>
+          <label for="master-name">主账本名称</label><input id="master-name" maxlength="40" autocomplete="off" placeholder="如 考研英语、新概念 2">
+          <fieldset class="preset-picks">
+            <legend>分组 <span class="hint">之后可在「分组」里随时增删</span></legend>
+            <label class="pick"><input id="preset-set" type="checkbox" checked><span>套题</span><span class="hint">第 1–3 套</span></label>
+            <label class="pick"><input id="preset-type" type="checkbox" checked><span>题型</span><span class="hint" lang="en">Writing · Listening · Cloze …</span></label>
+            <label for="master-groups" class="pick-more">其他分组 <span class="hint">用顿号或逗号分隔</span></label><input id="master-groups" maxlength="120" autocomplete="off" placeholder="如 难度、课程、章节">
+            <label class="pick pick-generate"><input id="preset-generate" type="checkbox"><span id="preset-generate-text">同时建立 套题 × 题型 的全部子账本</span></label>
+          </fieldset>
+        </div>
+        <fieldset id="exam-fields" class="exam-picker">
+          <legend>真题子账本 <span class="hint">归入主账本 年份-月份；不填则用自定义名称</span></legend>
+          <div class="exam-grid">
+            <div><label for="exam-year">年份</label><select id="exam-year"><option value="">—</option></select></div>
+            <div><label for="exam-month">月份</label><select id="exam-month"><option value="">—</option><option value="06">6 月</option><option value="12">12 月</option><optgroup label="其他月份"><option value="01">1 月</option><option value="02">2 月</option><option value="03">3 月</option><option value="04">4 月</option><option value="05">5 月</option><option value="07">7 月</option><option value="08">8 月</option><option value="09">9 月</option><option value="10">10 月</option><option value="11">11 月</option></optgroup></select></div>
+            <div class="exam-set-cell"><label for="exam-set">套题</label><div class="set-input"><input id="exam-set" type="text" inputmode="numeric" maxlength="3" autocomplete="off" placeholder="如 1" aria-describedby="exam-preview-line"><span class="set-picks" role="group" aria-label="快速选择套题"><button type="button" data-set-pick="1" aria-label="第 1 套">1</button><button type="button" data-set-pick="2" aria-label="第 2 套">2</button><button type="button" data-set-pick="3" aria-label="第 3 套">3</button></span></div></div>
+            <div><label for="exam-type">题型</label><select id="exam-type" lang="en"><option value="">—</option><option>Writing</option><option>Listening</option><option>Cloze</option><option>Matching</option><option>Reading</option><option>Translation</option></select></div>
+          </div>
+          <div class="exam-preview"><p id="exam-preview-line" aria-live="polite"><span class="exam-preview-label">生成名称</span> <output id="exam-preview" for="exam-year exam-month exam-set exam-type" lang="en">—</output></p><button id="exam-apply" type="button" class="small quiet" disabled>使用生成名称</button></div>
+        </fieldset>
+        <label for="tag-name">账本名称</label><input id="tag-name" maxlength="120" autocomplete="off">
+        <label for="tag-date">录入日期 <span class="hint">用于排序</span></label><input id="tag-date" type="date" min="1900-01-01" max="9999-12-31">
+        <div id="tag-membership" class="membership" hidden>
+          <label for="tag-master">所属主账本 <span class="hint">归属只是分类，不移动或复制词条</span></label><select id="tag-master"></select>
+          <div id="membership-groups" class="membership-groups"></div>
+        </div>
+      </div>
+      <div id="word-fields" hidden><label for="edit-english">英文单词或短语</label><input id="edit-english" maxlength="200" autocomplete="off" spellcheck="false" lang="en"><label for="edit-meaning">中文释义</label><textarea id="edit-meaning" maxlength="4000" rows="4"></textarea><div class="composer-field field-example"><div class="field-label"><label for="edit-example">英文例句 <span class="hint">可选</span></label><button type="button" class="bold-button" data-bold="edit-example" aria-label="加粗所选英文例句文字" aria-keyshortcuts="Control+B" title="加粗 / 取消加粗（Ctrl+B）"><b aria-hidden="true">B</b></button></div><textarea id="edit-example" maxlength="12000" rows="3" lang="en" placeholder="粘贴原文，保留换行"></textarea><p class="rich-preview" data-preview="edit-example" aria-hidden="true" hidden></p></div><div class="composer-field field-translation"><div class="field-label"><label for="edit-translation">例句中文翻译 <span class="hint">可选</span></label><button type="button" class="bold-button" data-bold="edit-translation" aria-label="加粗所选例句中文翻译文字" aria-keyshortcuts="Control+B" title="加粗 / 取消加粗（Ctrl+B）"><b aria-hidden="true">B</b></button></div><textarea id="edit-translation" maxlength="12000" rows="3" placeholder="填写自己的翻译"></textarea><p class="rich-preview" data-preview="edit-translation" aria-hidden="true" hidden></p></div><label for="edit-note">备注 <span class="hint">可选</span></label><textarea id="edit-note" maxlength="4000" rows="2" placeholder="派生词、词根词缀、记忆方法…"></textarea></div>
+      <p id="editor-error" class="error-text" role="alert"></p>
+      <div class="dialog-actions"><span id="editor-tip" class="tip-wrap" hidden><button type="button" class="help-tip" aria-label="键盘快捷键" aria-expanded="false" aria-describedby="editor-tip-text">?</button><span id="editor-tip-text" role="tooltip" class="tip"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> 保存 · 例句中 <kbd>Ctrl</kbd>+<kbd>B</kbd> 加粗</span></span><button id="cancel-editor" type="button" class="quiet">取消</button><button type="submit" class="primary">保存</button></div>
+    </form>
+  </dialog>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-description">
+    <h2 id="confirm-title"></h2><p id="confirm-description" class="preserve-lines"></p>
+    <p id="confirm-error" class="error-text" role="alert"></p>
+    <div class="dialog-actions"><button id="cancel-confirm" type="button" class="quiet" autofocus>取消</button><button id="merge-confirm" type="button" class="primary" hidden>合并导入 · 保留现有</button><button id="accept-confirm" type="button" class="danger solid">确认</button></div>
+  </dialog>
+  <dialog id="auth-dialog" aria-labelledby="auth-title" aria-describedby="auth-description">
+    <h2 id="auth-title">登录前先备份游客数据</h2>
+    <p id="auth-description" class="preserve-lines"></p>
+    <p>ChatGPT 登录会跳转页面，无法保留游客内存。请先导出，登录后读取你的云端账本，再用“导入恢复”选择合并或取消。</p>
+    <label id="draft-ack-label" hidden><input id="draft-ack" type="checkbox">我已备份或愿意放弃尚未提交的输入</label>
+    <p id="auth-error" class="error-text" role="alert"></p>
+    <div class="dialog-actions"><button id="auth-cancel" type="button" class="quiet">继续游客使用</button><button id="auth-export" type="button" class="primary">导出游客 JSON</button><a id="auth-continue" href="/signin-with-chatgpt?return_to=/ledger.html" target="_top" aria-disabled="true">已备份，继续登录</a></div>
+  </dialog>
+  <template id="art-review-hero"><svg class="art rv-art" viewBox="0 0 200 128" aria-hidden="true" focusable="false"><path class="art-clay art-pop" d="M22 38c14-16 46-18 62-4 13 11 12 36 1 50-13 16-42 20-58 7C13 80 8 52 22 38z"/><path class="art-paper art-ink" d="M30 32.6c17-2.4 34-4.4 51.6-6.2l7.6 63.4c-17.4 2-34.6 4-51.8 6.4z"/><path class="art-ink art-thin art-draw d1" d="M40 48.4c9.8-1.4 19.6-2.6 29.4-3.6M41.4 58.6c7-.9 14-1.6 21-2.4" pathLength="100"/><path class="art-solid" d="M42.6 69.4l19.6-2.4.9 7.2-19.6 2.4z"/><path class="art-ink art-draw d2" d="M98 28.6c5.6 15.4 11.4 23.4 20.6 27.8" pathLength="100"/><path class="art-ink art-thin rv-jump" d="M119 56V33.6M149.6 59V39"/><path class="art-ink art-draw d3" d="M119.4 33.6c7.8 13.4 17.4 21 30 24.6" pathLength="100"/><path class="art-ink art-draw d4" d="M150 39.4c11 11.4 24.8 17.4 41.6 19.4" pathLength="100"/><circle class="art-clay art-pop p2" cx="119.2" cy="33.4" r="4.2"/><circle class="art-clay art-pop p2" cx="149.8" cy="39.2" r="3.8"/><path class="art-ink art-thin" d="M12 112.4c58 2.2 118 2.2 178-.8"/><g class="art-tone"><circle cx="160" cy="94" r="1.4"/><circle cx="166" cy="94" r="1.4"/><circle cx="172" cy="94" r="1.4"/><circle cx="163" cy="99" r="1.4"/><circle cx="169" cy="99" r="1.4"/><circle cx="175" cy="99" r="1.4"/><circle cx="166" cy="89" r="1.4"/></g></svg></template>
+  <template id="art-review-done"><svg class="art rv-art" viewBox="0 0 200 128" aria-hidden="true" focusable="false"><path class="art-clay art-pop" d="M44 30c18-14 56-14 74 2 14 12 14 40 0 54-16 16-50 18-68 4C34 78 28 44 44 30z"/><path class="art-paper art-ink" d="M66 24.4c23.4.6 46.6 2 70 4l-4.2 62c-23.2-1.8-46.4-3.2-69.8-4z"/><path class="art-paper art-ink" d="M52.4 36.6c24-1 48-1.4 72-1.2l1.4 62.4c-24.2-.2-48.4.2-72.4 1.2z"/><path class="art-ink art-thin art-draw d1" d="M64 52.6c13-.8 26-1 39-.8M64.4 61.6c9-.4 18-.6 27-.4" pathLength="100"/><path class="art-ink art-draw d2" d="M48 76.4c27 1.6 53 1.2 80-1.4" pathLength="100"/><path class="art-ink art-draw d3" d="M127.4 74.6c10-4.6 18.8 1.2 15.4 8.4-3.4 6.6-13 2.6-10.6-4.6 2.6-7.8 19.4-10.8 32.2-4.4" pathLength="100"/><path class="art-clay art-pop p2" d="M165.6 71c3-2.6 8-1.8 9 1.8.9 3.4-1.4 6.4-4.8 6.4-3.6 0-6.2-3-5.6-6.2.2-.8.6-1.4 1.4-2z"/><path class="art-clay" d="M74.2 80.2c4.6-3.6 12.2-2.6 14.6 2.4 2.2 4.6-.4 10.4-5.4 11.8-5 1.4-10.6-1.2-11.6-6-.6-3 .4-6.2 2.4-8.2z"/><path class="art-ink art-thin art-draw d4" d="M75.6 86.4c1.6 1 2.8 2.2 3.6 3.6 2.2-4 4.6-7 7.6-9.4" pathLength="100"/><path class="art-ink art-thin" d="M150 24l4-6.4M156.4 31.4l7.4-2M145.4 21.6l.8-7.4"/><path class="art-ink art-thin" d="M12 113c58 2.2 118 2.2 178-.8"/><g class="art-tone"><circle cx="26" cy="96" r="1.4"/><circle cx="32" cy="96" r="1.4"/><circle cx="29" cy="101" r="1.4"/><circle cx="35" cy="101" r="1.4"/><circle cx="23" cy="101" r="1.4"/></g></svg></template>
+  <dialog id="review-dialog" class="fc-dialog rv-dialog" aria-labelledby="rv-kicker rv-title" data-view="home">
+    <header class="fc-head rv-head">
+      <button id="rv-back" type="button" class="quiet rv-back" aria-label="返回概览" hidden><svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg></button>
+      <div class="fc-heading"><p id="rv-kicker" class="fc-kicker">智能复习 <span lang="en">Spaced Review</span></p><h2 id="rv-title">智能复习</h2></div>
+      <p id="rv-counter" class="fc-counter" aria-hidden="true" hidden><span id="rv-position">01</span><span class="fc-slash">/</span><span id="rv-total">01</span></p>
+      <button id="rv-close" type="button" class="quiet fc-close" aria-label="关闭智能复习"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5.5 5.5l9 9m0-9-9 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg></button>
+    </header>
+    <div id="rv-progress" class="fc-progress" role="progressbar" aria-label="本轮进度" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1" hidden><span id="rv-progress-fill" class="fc-progress-fill"></span></div>
+    <div id="rv-home" class="rv-view rv-home"></div>
+    <div id="rv-session" class="rv-view rv-session" hidden>
+      <div class="fc-toolbar rv-toolbar">
+        <p id="rv-mode" class="rv-mode"></p>
+        <button id="rv-shuffle" type="button" class="quiet" hidden>本轮洗牌</button>
+        <p id="rv-undo" class="rv-undo" hidden><span>已标记掌握</span><button id="rv-undo-button" type="button" class="quiet">撤销</button></p>
+        <button id="rv-master" type="button" class="quiet rv-master" aria-pressed="false"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M7.2 6.4c3-2.2 8.2-1.6 10.2 1.4 1.8 2.8 1 7.2-1.8 9.2-3 2-7.8 1.6-9.8-1.4-1.8-2.8-1.6-7.2 1.4-9.2z"/><path class="hi-ink" d="M8.2 12.4c1.3.9 2.3 1.9 3.1 3.1 1.7-3.1 3.6-5.5 5.9-7.4"/></svg><span class="rv-master-text">标记为已掌握</span></button>
+        <span class="tip-wrap fc-help"><button type="button" class="help-tip" aria-label="快捷键与说明" aria-expanded="false" aria-describedby="rv-tip">?</button><span id="rv-tip" role="tooltip" class="tip"><kbd>Space</kbd> 翻面 · <kbd>1</kbd> 忘记 · <kbd>2</kbd> 记得 · 翻阅时 <kbd>←</kbd> <kbd>→</kbd> 切换 · <kbd>Esc</kbd> 返回概览<br>翻面计为背诵一次；「记得」排下一次日期，「忘记」放到本轮最后；随时可以退出</span></span>
+      </div>
+      <div id="rv-stage" class="fc-stage" tabindex="0" role="group" aria-roledescription="词条卡片"><div id="rv-deck" class="fc-deck"></div></div>
+      <p id="rv-hint" class="fc-hint" aria-hidden="true"></p>
+      <p id="rv-status" class="rv-status" role="status" aria-live="polite"></p>
+      <div class="fc-controls rv-controls">
+        <div id="rv-front-controls" class="rv-front-controls">
+          <button id="rv-prev" type="button" class="quiet fc-nav"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>上一张</button>
+          <button id="rv-flip" type="button" class="primary fc-flip-button" aria-label="翻面 · 看释义"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 8.5A6.2 6.2 0 0 1 15.4 6M16 11.5A6.2 6.2 0 0 1 4.6 14M15.6 2.8V6.2h-3.4M4.4 17.2v-3.4h3.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg>翻面</button>
+          <button id="rv-next" type="button" class="quiet fc-nav fc-nav-next">下一张<svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg></button>
+        </div>
+        <div id="rv-grades" class="rv-grades" role="group" aria-label="这次记得吗" hidden>
+          <button id="rv-forget" type="button" class="rv-grade rv-grade-again" aria-keyshortcuts="1"><span class="rv-grade-key" aria-hidden="true">1</span><span class="rv-grade-name">忘记</span><span class="rv-grade-ivl"></span></button>
+          <button id="rv-remember" type="button" class="rv-grade rv-grade-good" aria-keyshortcuts="2"><span class="rv-grade-key" aria-hidden="true">2</span><span class="rv-grade-name">记得</span><span class="rv-grade-ivl"></span></button>
+        </div>
+      </div>
+    </div>
+    <div id="rv-guide" class="rv-view rv-guide" hidden>
+      <figure class="rv-curve-figure">
+        <svg class="art rv-curve" viewBox="0 0 330 178" role="img" aria-label="遗忘曲线示意：不复习时记忆持续下滑；每次在快要忘记时复习，下一段曲线更平缓，间隔按 1、2、3、5、7 天逐步拉长。"><path class="rv-axis" d="M38 10c-.6 44-.4 88 .4 132M36 141.6c94 1 188 .6 284-.8"/><path class="rv-target" d="M38 40.8H318"/><text class="rv-tick" x="4" y="20">100%</text><text class="rv-tick rv-tick-clay" x="9" y="45">90%</text><text class="rv-tick" x="9" y="144">50%</text><text class="rv-tick" x="280" y="162">时间 →</text><path class="rv-ghost" d="M40 16c16 50 48 90 112 104 52 10 110 13 166 14"/><text class="rv-tick" x="214" y="125">不复习</text><path class="rv-seg s1" d="M40 16c6 12 13 20 22 24.8" pathLength="100"/><path class="rv-jump" d="M62 40.8V16M108 40.8V16M186 40.8V16"/><path class="rv-seg s2" d="M62 16c10 12 26 21 46 24.8" pathLength="100"/><path class="rv-seg s3" d="M108 16c18 12 46 21 78 24.8" pathLength="100"/><path class="rv-seg s4" d="M186 16c34 11 82 19 130 23.4" pathLength="100"/><g class="rv-review-dots"><circle class="d1" cx="62" cy="40.8" r="4.4"/><circle class="d2" cx="108" cy="40.8" r="4.4"/><circle class="d3" cx="186" cy="40.8" r="4.4"/></g><text class="rv-tick" x="48" y="60">复习</text><text class="rv-tick" x="96" y="60">复习</text><text class="rv-tick" x="174" y="60">复习</text></svg>
+        <figcaption>不复习时，记忆先快后慢地流失；在快要忘记时复习一次，下一段曲线就更平缓，间隔按 1 · 2 · 3 · 5 · 7 天拉长。</figcaption>
+      </figure>
+      <div class="rv-guide-text">
+        <section><h3>遗忘曲线</h3><p>心理学家艾宾浩斯发现，新学的内容如果不再接触，几小时到几天内就会忘掉大半，随后流失变慢。间隔重复的做法是：赶在快要忘记的时候再见它一面。每复习一次，这段记忆就更牢，下一次也忘得更慢。</p></section>
+        <section><h3>固定间隔</h3><p>每个词条按同一条曲线前进：第一次「记得」之后隔 <b>1</b> 天再见，然后依次隔 <b>2</b>、<b>3</b>、<b>5</b>、<b>7</b> 天，此后每 7 天见一次。例如今天记得，就在第 1、3、6、11、18、25 天……再次出现。下一次的日期总是从<b>实际记得的那天</b>算起，补做逾期的复习也不会乱。</p></section>
+        <section><h3>两个按钮</h3><dl class="rv-grade-guide"><div><dt>记得</dt><dd>完成这次复习，按曲线排好下一次。忘记后又记起来，只重复当前这一步，不往前跳。</dd></div><div><dt>忘记</dt><dd>不推进曲线，卡片放到本轮最后再来一次。随时可以退出，没记住的词今天仍在待复习里。</dd></div></dl></section>
+        <section><h3>背诵、掌握与数据</h3><p>翻面只计入当天的「背诵」次数。「提前巩固」只是多看一遍，不改变日期。「标记为已掌握」会让词条立即退出复习，与列表里的勾选是同一个状态；取消勾选后，它带着原来的进度回来：原日期已过就今天复习，从未学过的回到新词里。游客的复习进度只保存在本页，导出 JSON 时会一并备份；登录后自动同步到个人云端。</p></section><section><h3>记忆分布与每日统计</h3><dl class="rv-grade-guide"><div><dt>未学习</dt><dd>还没有答过「记得」或「忘记」。只翻面不作答不算学习。</dd></div><div><dt>记忆中</dt><dd>答过至少一次，还没有排进 7 天复习间隔。</dd></div><div><dt>巩固中</dt><dd>曲线已经把它排进 7 天复习间隔。按「忘记」不移动曲线，所以它仍在巩固中。</dd></div><div><dt>已掌握</dt><dd>你标记的词条，优先于其他三档；取消后回到原来的档位。</dd></div></dl><p>「背诵」「作答」是次数，同一个词条可能计多次；「复习过」「新学」是不同词条的个数。每天的统计按「每日统计重置」设置所选的 UTC/GMT 固定偏移在零点重置；自动模式使用设备本地时区。固定偏移不随夏令时变化，历史按日汇总保留原日期。</p></section>
+      </div>
+      <div class="rv-guide-foot"><button id="rv-guide-back" type="button" class="primary">回到复习</button></div>
+    </div>
+    <p id="rv-live" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+  </dialog>
+  <template id="art-official"><svg class="art of-art" viewBox="0 0 240 150" aria-hidden="true" focusable="false"><path class="art-clay art-pop" d="M38.6 50.4c15.6-22.4 58.4-28.6 82.6-12.4 17.8 12 18.4 44.2 4.4 62.4-15.8 20.4-56.6 24.6-76.4 8.6C30.6 95.2 26.4 68 38.6 50.4z"/><path class="art-paper art-ink" d="M50.6 42.8c5.4-.5 10.6-.5 15.8 0l.6 68.2c-5.4.4-10.8.4-16.2 0z"/><path class="art-ink art-thin art-draw d1" d="M54.8 54.6c3.2-.3 6.4-.3 9.4 0M54.8 60.8c3.2-.2 6.4-.2 9.4 0" pathLength="100"/><path class="art-paper art-ink" d="M69.4 53.6c4.8-.4 9.4-.4 14.2 0l.4 57.6c-4.8.4-9.8.4-14.6 0z"/><path class="art-solid" d="M69.8 91.6l14-.2.1 5.6-14.1.2z"/><path class="art-paper art-ink" d="M87.8 60.2l13.6-3.8 15.6 53.2-13.8 3.8z"/><path class="art-ink art-thin art-draw d2" d="M93.6 70.4l6.6-1.9M95.4 76.6l5-1.4" pathLength="100"/><path class="art-ink art-draw d3" d="M118.4 100.6c8.6 4.2 17.2 2.4 23.6-4.6 4.6-5 3-11.6-2.4-11.2-5.6.4-5.2 8.8 1.4 11.4 7.2 2.8 15.2-.4 20.4-5.6" pathLength="100"/><path class="art-clay art-pop p2" d="M164.6 64.4c9.4-7.2 25.6-5.2 30.8 5 4.8 9.4-.4 22.4-11.2 25.6-11.2 3.2-23.6-2-25.8-12.2-1.4-6.8.6-14 6.2-18.4z"/><path class="art-ink art-thin" d="M162.2 62.2c9.4-7.2 25.6-5.2 30.8 5"/><path class="art-ink art-draw d4" d="M169.8 79.2c2.6 1.8 4.6 3.8 6 6.2 3.6-6.4 7.6-11.2 12.2-14.8" pathLength="100"/><path class="art-ink art-thin" d="M200.4 52.4l5.2-5.4M205.8 60.6l7.2-1.6M196.6 47.6l.6-7.4"/><path class="art-ink" d="M22.6 112.4c64.6 2.2 131.4 2.2 196.4-1.2"/><path class="art-ink art-thin" d="M30.4 118.8c54 1.6 112 1.4 170-1"/><g class="art-tone"><circle cx="196" cy="98" r="1.4"/><circle cx="202" cy="98" r="1.4"/><circle cx="208" cy="98" r="1.4"/><circle cx="199" cy="103" r="1.4"/><circle cx="205" cy="103" r="1.4"/><circle cx="211" cy="103" r="1.4"/><circle cx="202" cy="93" r="1.4"/></g></svg></template>
+  <dialog id="official-dialog" class="fc-dialog of-dialog" aria-labelledby="of-title" data-view="shelf">
+    <header class="fc-head of-head">
+      <button id="of-back" type="button" class="quiet rv-back of-back" aria-label="返回官方账本目录" hidden><svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg></button>
+      <div class="fc-heading"><p class="fc-kicker">官方词汇账本 <span lang="en">Official Ledgers</span></p><h2 id="of-title" tabindex="-1">官方词汇账本</h2></div>
+      <button id="of-close" type="button" class="quiet fc-close" aria-label="关闭官方词汇账本"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5.5 5.5l9 9m0-9-9 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg></button>
+    </header>
+    <div class="of-body">
+      <nav id="of-index" class="of-index" aria-label="官方账本目录">
+        <p class="of-lede">由词汇账本整理、校对的公共词库。这里只供浏览；复制一份到「我的账本」后即可自由编辑。</p>
+        <div class="of-find" hidden><label for="of-find" class="sr-only">查找官方账本</label><div class="search-field"><svg class="hi" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="hi-acc" d="M6.6 6.2c2.2-1.6 5.7-1.4 7 .6 1.2 1.9.2 4.6-1.9 5.8-2.3 1.3-5.4.9-6.4-1.1-.8-1.7-.4-4.1 1.3-5.3z"/><path class="hi-ink" d="M10.5 3.9c3.4-.2 6.2 2.4 6.1 5.8-.1 3.4-2.9 5.9-6.3 5.8-3.3-.1-5.9-2.8-5.8-6 .1-3 2.8-5.4 6-5.6z"/><path class="hi-ink" d="M15 14.7c1.6 1.4 3.2 3 4.9 4.9"/></svg><input id="of-find" type="search" maxlength="80" autocomplete="off" placeholder="查找账本：名称、来源"></div></div>
+        <div id="of-cats" class="chip-rail of-cats" role="group" aria-label="按分类筛选"></div>
+        <div id="of-shelf" class="of-shelf"></div>
+      </nav>
+      <section id="of-sheet" class="of-sheet" aria-label="账本内容"></section>
+    </div>
+    <p id="of-live" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+  </dialog>
+  <dialog id="facet-sheet" class="facet-sheet" aria-labelledby="facet-sheet-title">
+    <div class="sheet-head"><div><p class="kicker">筛选子账本</p><h2 id="facet-sheet-title"></h2></div><button id="facet-close" type="button" class="quiet" aria-label="关闭筛选">关闭</button></div>
+    <p class="sheet-note">同一分组里可多选（任一符合）；不同分组之间同时满足。</p>
+    <div id="facet-sheet-body" class="sheet-body"></div>
+    <div class="sheet-foot"><button id="facet-clear" type="button" class="quiet">清除筛选</button><button id="facet-done" type="button" class="primary">完成 <span id="facet-result"></span></button></div>
+  </dialog>
+  <dialog id="groups-dialog" class="groups-dialog" aria-labelledby="groups-title">
+    <div class="sheet-head"><div><p class="kicker">分组与归属</p><h2 id="groups-title"></h2></div><button id="groups-close" type="button" class="quiet" aria-label="关闭，不保存">关闭</button></div>
+    <div id="groups-body" class="groups-body"></div>
+    <p id="groups-error" class="error-text" role="alert"></p>
+    <div class="sheet-foot"><button id="groups-delete-master" type="button" class="quiet danger" hidden>删除主账本</button><span class="sheet-foot-gap"></span><button id="groups-cancel" type="button" class="quiet">取消</button><button id="groups-save" type="button" class="primary">保存</button></div>
+  </dialog>
+  <dialog id="sharing-dialog" class="sharing-dialog" aria-labelledby="sharing-title"><div class="sharing-head"><div><p class="kicker" lang="en">Ledger Exchange</p><h2 id="sharing-title">分享账本</h2></div><button id="sharing-close" type="button" class="quiet" aria-label="关闭分享面板">关闭</button></div><div id="sharing-body" class="sharing-body"></div><p id="sharing-status" class="sharing-status" role="status" aria-live="polite"></p><div id="sharing-actions" class="sharing-actions"></div></dialog>
+  <dialog id="community-dialog" class="sharing-dialog community-dialog" aria-labelledby="community-title" aria-describedby="community-status">
+    <div class="sharing-head community-head"><div><p id="community-kicker" class="kicker" lang="en">Profile</p><h2 id="community-title">我的资料</h2></div><button id="community-close" type="button" class="quiet">关闭</button></div>
+    <div id="community-tabs" class="community-tabs" role="tablist" aria-label="资料与社区"><button id="community-tab-profile" type="button" role="tab" data-tab="profile" aria-selected="true" aria-controls="community-body">我的资料</button><button id="community-tab-preview" type="button" role="tab" data-tab="preview" aria-selected="false" aria-controls="community-body" tabindex="-1">公开主页</button><button id="community-tab-community" type="button" role="tab" data-tab="community" aria-selected="false" aria-controls="community-body" tabindex="-1">社区</button></div>
+    <div id="community-body" class="community-body" role="tabpanel"></div>
+    <p id="community-status" class="community-status" role="status" aria-live="polite"></p>
+    <div id="community-foot" class="community-foot" hidden></div>
+  </dialog>
+  <noscript>请在浏览器中启用 JavaScript 后使用词汇账本。</noscript>
+</body>
+</html>

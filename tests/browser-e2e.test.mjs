@@ -179,7 +179,7 @@ async function launchHeadlessBrowser(exePath) {
   };
 }
 
-test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, persistence, JSON import/export, sign-in prompt, back gesture, and 7 viewports', async () => {
+test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, curve review, persistence, JSON import/export, sign-in prompt, back gesture, and 7 viewports', async () => {
   const exe = findBrowserExecutable();
   assert.ok(exe, 'Chromium browser (Edge/Chrome) required for WebView E2E test');
 
@@ -330,18 +330,13 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, pers
       if (settingsToggle.getAttribute('aria-expanded') !== 'true') {
         settingsToggle.click();
       }
-      const newSel = document.getElementById('rv-new-per-day');
-      newSel.value = '50';
-      newSel.dispatchEvent(new Event('change', { bubbles: true }));
+      document.querySelector('[data-quota="50"]').click();
       await new Promise(r => setTimeout(r, 40));
 
-      const retSel = document.getElementById('rv-retention');
-      retSel.value = '0.95';
-      retSel.dispatchEvent(new Event('change', { bubbles: true }));
-      await new Promise(r => setTimeout(r, 40));
+      const resetSel=document.getElementById('rv-reset-offset'); resetSel.value='300'; resetSel.dispatchEvent(new Event('change',{bubbles:true})); await new Promise(r=>setTimeout(r,40));
 
       const focusedId = document.activeElement?.id;
-      const selectHeight = document.getElementById('rv-retention').getBoundingClientRect().height;
+      const selectHeight = document.getElementById('rv-reset-offset').getBoundingClientRect().height;
       const syncStatus = document.querySelector('#rv-home .rv-sync')?.textContent;
       const hasTrendSvg = Boolean(document.querySelector('#rv-home svg.rv-bars'));
       const hasDistStrip = Boolean(document.querySelector('#rv-home .rv-dist'));
@@ -351,8 +346,8 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, pers
       await new Promise(r => setTimeout(r, 60));
       document.getElementById('rv-flip').click();
       await new Promise(r => setTimeout(r, 60));
-      const grade3Interval = document.querySelector('#rv-grade-3 .rv-due')?.textContent || document.querySelector('#rv-grade-3 small')?.textContent || document.getElementById('rv-grade-3')?.textContent;
-      document.getElementById('rv-grade-3').click();
+      const grade3Interval = document.querySelector('#rv-remember .rv-due')?.textContent || document.querySelector('#rv-remember small')?.textContent || document.getElementById('rv-remember')?.textContent;
+      document.getElementById('rv-remember').click();
       await new Promise(r => setTimeout(r, 380));
 
       return {
@@ -360,7 +355,7 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, pers
         hasCurveSvg: Boolean(curveSvg),
         curveSegments,
         curveDots,
-        hasFsrs6Formula: guideText.includes('FSRS-6') && guideText.includes('自由间隔重复调度器') && guideText.includes('稳定性'),
+        hasCurveGuide: guideText.includes('固定间隔') && guideText.includes('忘记'),
         hasOfflineCopy: guideText.includes('Android 离线版的复习进度会自动持久保存在手机本地'),
         backFromGuide,
         viewAfterGuideBack,
@@ -377,16 +372,16 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, pers
     assert.equal(guideAndSettings.hasCurveSvg, true);
     assert.equal(guideAndSettings.curveSegments, 4);
     assert.equal(guideAndSettings.curveDots, 3);
-    assert.equal(guideAndSettings.hasFsrs6Formula, true);
+    assert.equal(guideAndSettings.hasCurveGuide, true);
     assert.equal(guideAndSettings.hasOfflineCopy, true);
     assert.equal(guideAndSettings.backFromGuide, 'handled');
     assert.equal(guideAndSettings.viewAfterGuideBack, 'home');
-    assert.equal(guideAndSettings.focusedId, 'rv-retention');
+    assert.equal(guideAndSettings.focusedId, 'rv-reset-offset');
     assert.ok(guideAndSettings.selectHeight >= 40, `Expected touch-friendly select height >= 40px, got ${guideAndSettings.selectHeight}`);
     assert.match(guideAndSettings.syncStatus, /本机离线：复习进度自动保存在手机本地/);
     assert.equal(guideAndSettings.hasTrendSvg, true);
     assert.equal(guideAndSettings.hasDistStrip, true);
-    assert.match(guideAndSettings.grade3Interval, /1 天/, '95% target retention must shorten Good interval on a new card to 1 day');
+    assert.match(guideAndSettings.grade3Interval, /1 天/, 'Fixed curve schedules a new remembered word for one day');
 
     // Back gesture from review session -> review home -> close review dialog
     assert.equal(await cdp.eval(`document.getElementById('review-dialog').dataset.view`), 'session');
@@ -395,7 +390,7 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, pers
     assert.equal(await cdp.eval(`window.__handleAndroidBack()`), 'handled');
     assert.equal(await cdp.eval(`document.getElementById('review-dialog').open`), false);
 
-    // 6. Reload page (via about:blank to guarantee full page unload) and verify IndexedDB persistence of words, FSRS cards, and SRS settings
+    // 6. Reload page (via about:blank to guarantee full page unload) and verify IndexedDB persistence of words, curve cards, and SRS settings
     await cdp.send('Page.navigate', { url: 'about:blank' });
     await cdp.eval(`new Promise(r => setTimeout(r, 80))`);
     await cdp.send('Page.navigate', { url: `${srv.url}/index.html` });
@@ -414,8 +409,8 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, pers
       if (settingsToggle && settingsToggle.getAttribute('aria-expanded') !== 'true') {
         settingsToggle.click();
       }
-      const newPerDay = document.getElementById('rv-new-per-day')?.value;
-      const retention = document.getElementById('rv-retention')?.value;
+      const newPerDay = document.querySelector('[data-quota="50"]')?.getAttribute('aria-checked') === 'true' ? '50' : null;
+      const retention = document.getElementById('rv-reset-offset')?.value;
       const todayFlips = document.querySelector('#rv-home .rv-figures .rv-fig')?.textContent;
       document.getElementById('rv-close').click();
       return {
@@ -429,9 +424,9 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, pers
     })()`);
     assert.equal(afterReload.currentName, '26-06-1-Reading');
     assert.equal(afterReload.rows, 2);
-    assert.match(afterReload.reviewMeta, /已背诵 1 张/);
+    assert.match(afterReload.reviewMeta, /已背诵 1 次/);
     assert.equal(afterReload.newPerDay, '50');
-    assert.equal(afterReload.retention, '0.95');
+    assert.equal(afterReload.retention, '300');
     assert.equal(afterReload.todayFlips, '1');
 
     // 7. Test JSON Export and Merge Import via #import-file
@@ -445,7 +440,7 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, FSRS review, pers
     assert.equal(parsedExport.schemaVersion, 2);
     assert.equal(parsedExport.words.length, 2);
     assert.equal(parsedExport.review.cards.length, 1);
-    assert.deepEqual(parsedExport.review.settings, { newPerDay: 50, retention: 0.95 });
+    assert.deepEqual(parsedExport.review.settings, { newPerDay: 50, retention: 0.9, utcOffsetMinutes: 300 });
 
     // Simulate selecting an external web JSON backup in #import-file and clicking #merge-confirm
     const afterMerge = await cdp.eval(`(async () => {

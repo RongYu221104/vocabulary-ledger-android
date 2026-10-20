@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
-const publicDir = path.resolve(projectRoot, '..', 'cloud', 'public');
+const publicDir = process.env.LEDGER_WEB_SOURCE ? path.resolve(process.env.LEDGER_WEB_SOURCE) : path.resolve(projectRoot, 'web-source');
 const srcDir = path.resolve(projectRoot, 'src');
 const wwwDir = path.resolve(projectRoot, 'www');
 
@@ -28,10 +28,9 @@ function assertReplace(source, needle, replacement, label) {
   return source.replace(needle, replacement);
 }
 
-// 1. Copy the sibling cloud/public source into this standalone Android project's www/.
-if (fs.existsSync(wwwDir)) {
-  fs.rmSync(wwwDir, { recursive: true, force: true });
-}
+// 1. Materialize the maintained, version-pinned web-source into generated www/.
+if (wwwDir !== path.join(projectRoot, 'www') || fs.lstatSync(wwwDir, { throwIfNoEntry: false })?.isSymbolicLink()) throw Error('Unsafe generated web directory');
+if (fs.existsSync(wwwDir)) fs.rmSync(wwwDir, { recursive: true, force: true });
 copyDirRecursive(publicDir, wwwDir);
 
 // 2. Copy Android offline adapter CSS and JS
@@ -85,6 +84,14 @@ appJs = assertReplace(
 );
 
 fs.writeFileSync(appJsPath, appJs, 'utf8');
+
+// Only the shipped Android copy uses durable guest storage; do not promise temporary memory here.
+appJs = appJs.replace('已复制「${tag.name}」· 游客账本仅在本页，记得导出 JSON。', '已复制「${tag.name}」并保存在本机。');
+fs.writeFileSync(appJsPath, appJs, 'utf8');
+const officialUiPath = path.join(wwwDir, 'js', 'official-ui.js');
+let officialUi = fs.readFileSync(officialUiPath, 'utf8');
+officialUi = assertReplace(officialUi, '游客副本只在当前页面内存中，刷新即清空，记得导出 JSON。', '副本自动保存在本机，关闭应用后仍可离线使用；可导出 JSON 备份。', 'official offline persistence copy');
+fs.writeFileSync(officialUiPath, officialUi, 'utf8');
 
 // 4. Patch www/js/review-ui.js with offline review sync label
 const reviewUiPath = path.join(wwwDir, 'js', 'review-ui.js');
@@ -172,4 +179,4 @@ html = assertReplace(
 fs.writeFileSync(ledgerHtmlPath, html, 'utf8');
 fs.writeFileSync(path.join(wwwDir, 'index.html'), html, 'utf8');
 
-console.log('[sync-web] Successfully synced ../cloud/public -> android-offline/www');
+console.log('[sync-web] Successfully synced maintained web-source -> www');

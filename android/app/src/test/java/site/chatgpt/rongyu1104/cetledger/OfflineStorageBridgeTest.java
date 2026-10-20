@@ -90,6 +90,23 @@ public class OfflineStorageBridgeTest {
     }
 
     @Test
+    public void newerSqlMirrorSurvivesFailedFileWrite() throws Exception {
+        File dir = tempFolder.newFolder("offline-partial-write");
+        Map<String, String> sql = new HashMap<>();
+        OfflineStorageBridge.SqlMirror mirror = new OfflineStorageBridge.SqlMirror() {
+            public String read(String key) { return sql.get(key); }
+            public boolean write(String key, String json) { sql.put(key, json); return true; }
+        };
+        OfflineStorageBridge bridge = new OfflineStorageBridge(dir, null, mirror);
+        String old = "{\"format\":\"cet-android-offline-v1\",\"savedAt\":\"2026-10-20T00:00:00.000Z\",\"revision\":1}";
+        String latest = "{\"format\":\"cet-android-offline-v1\",\"savedAt\":\"2026-10-20T00:01:00.000Z\",\"revision\":2}";
+        assertTrue(bridge.writeStateJson(old));
+        assertTrue(new File(dir, "ledger_state_v1.json.tmp").mkdir());
+        assertTrue(bridge.writeStateJson(latest));
+        assertEquals(latest, new OfflineStorageBridge(dir, null, mirror).readStateJson());
+    }
+
+    @Test
     public void exportDelegateAndAutoBackupSanitizeFilenames() throws Exception {
         File dir = tempFolder.newFolder("offline-export");
         AtomicReference<String> exportedName = new AtomicReference<>();
