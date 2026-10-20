@@ -333,7 +333,7 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, curve review, per
       document.querySelector('[data-quota="50"]').click();
       await new Promise(r => setTimeout(r, 40));
 
-      const resetSel=document.getElementById('rv-reset-offset'); resetSel.value='345'; resetSel.dispatchEvent(new Event('change',{bubbles:true})); await new Promise(r=>setTimeout(r,40));
+      const resetSel=document.getElementById('rv-reset-offset'); resetSel.value='300'; resetSel.dispatchEvent(new Event('change',{bubbles:true})); await new Promise(r=>setTimeout(r,40));
 
       const focusedId = document.activeElement?.id;
       const selectHeight = document.getElementById('rv-reset-offset').getBoundingClientRect().height;
@@ -426,7 +426,7 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, curve review, per
     assert.equal(afterReload.rows, 2);
     assert.match(afterReload.reviewMeta, /已背诵 1 次/);
     assert.equal(afterReload.newPerDay, '50');
-    assert.equal(afterReload.retention, '345');
+    assert.equal(afterReload.retention, '300');
     assert.equal(afterReload.todayFlips, '1');
 
     // 7. Test JSON Export and Merge Import via #import-file
@@ -440,7 +440,7 @@ test('End-to-End WebView Emulation: offline boot, UI/UX, CRUD, curve review, per
     assert.equal(parsedExport.schemaVersion, 2);
     assert.equal(parsedExport.words.length, 2);
     assert.equal(parsedExport.review.cards.length, 1);
-    assert.deepEqual(parsedExport.review.settings, { newPerDay: 50, retention: 0.9, utcOffsetMinutes: 345 });
+    assert.deepEqual(parsedExport.review.settings, { newPerDay: 50, retention: 0.9, utcOffsetMinutes: 300 });
 
     // Simulate selecting an external web JSON backup in #import-file and clicking #merge-confirm
     const afterMerge = await cdp.eval(`(async () => {

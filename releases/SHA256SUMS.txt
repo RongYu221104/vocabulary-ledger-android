@@ -1,1 +1,1 @@
-475989e7ce487acc503455fc8a2d20d57b2991f0ea21f83062fcc08a9245d0aa  vocabulary-ledger-android-1.2.0.apk
+9eb66f1d30f7ddf62f37d8597cd09c90c8624f54a8582f0202e790fac929758b  vocabulary-ledger-android-1.2.0.apk

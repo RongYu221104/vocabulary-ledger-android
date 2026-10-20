@@ -330,7 +330,11 @@
       const clock = node('div', 'rv-reset-setting'), clockLabel = node('label', '', '每日统计重置');
       const select = node('select'); select.id = 'rv-reset-offset'; clockLabel.htmlFor = select.id; select.disabled = disabled;
       const automatic = node('option', '', `跟随设备（${R.offsetLabel(-new Date().getTimezoneOffset())}）`); automatic.value = 'auto'; select.append(automatic);
-      for (let off = -720; off <= 840; off += 15) { const option = node('option', '', R.offsetLabel(off)); option.value = String(off); select.append(option); }
+      for (let off = -720; off <= 840; off += 60) { const option = node('option', '', R.offsetLabel(off)); option.value = String(off); select.append(option); }
+      // Keep an imported/previously saved fractional offset until the user chooses a new setting.
+      if (R.validOffset(s.utcOffsetMinutes) && s.utcOffsetMinutes % 60 !== 0) {
+        const saved = node('option', '', `${R.offsetLabel(s.utcOffsetMinutes)}（已保存）`); saved.value = String(s.utcOffsetMinutes); select.append(saved);
+      }
       select.value = R.validOffset(s.utcOffsetMinutes) ? String(s.utcOffsetMinutes) : 'auto';
       select.addEventListener('change', () => save({ utcOffsetMinutes: select.value === 'auto' ? null : Number(select.value) }, '#rv-reset-offset'));
       clock.append(clockLabel, select, node('p', 'hint', '按所选偏移的 00:00 重置统计。固定 UTC/GMT 偏移不随夏令时改变；复习间隔保持原规则。旧记录只有日汇总，保留原日期，不倒算或复制历史次数。'));
