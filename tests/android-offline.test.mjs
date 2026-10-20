@@ -133,7 +133,7 @@ function createOfflineVmContext({ initialNativeState = '', onExport = null, onAu
   ctx.window = ctx;
   ctx.globalThis = ctx;
 
-  for (const script of ['model.js', 'order.js', 'flashcards.js', 'groups.js', 'fsrs.js', 'review.js', 'storage.js', 'android-offline.js']) {
+  for (const script of ['model.js', 'order.js', 'flashcards.js', 'groups.js', 'fsrs.js', 'curve.js', 'review-preference.js', 'review.js', 'official.js', 'storage.js', 'android-offline.js']) {
     const code = fs.readFileSync(path.join(wwwDir, 'js', script), 'utf8');
     vm.runInNewContext(code, ctx, { filename: script });
   }
@@ -148,6 +148,45 @@ function createOfflineVmContext({ initialNativeState = '', onExport = null, onAu
     docListeners
   };
 }
+
+test('Packaged official books copy without field loss and fixed UTC settings survive native-envelope restart (VM bridge)', async () => {
+  const first = createOfflineVmContext(), {LedgerModel:M, LedgerOfficial:O, LedgerCloud:S, LedgerReview:R}=first.ctx;
+  const store=new S.GuestStore(),review=new R.GuestReviewStore();
+  const catalog=JSON.parse(fs.readFileSync(path.join(wwwDir,'official/catalog.json'),'utf8'));
+  let records=0;
+  for (const raw of catalog.ledgers) {
+    const entries=[];
+    for (const file of raw.chunks) {
+      const part=JSON.parse(fs.readFileSync(path.join(wwwDir,'official',file),'utf8'));
+      entries.push(...O.normalizeEntries(part,raw.id,entries.length).entries);
+    }
+    records+=entries.length;
+    const mapped=O.toWords(entries);
+    assert.equal(mapped.clipped,0);
+    await store.save(M.mutate(store.current,'importTag',{name:raw.title,date:'2026-10-20',words:mapped.words}),{action:'importTag'});
+  }
+  assert.equal(records,9567);
+  assert.equal(store.current.words.length,9551);
+  review.record({settings:{utcOffsetMinutes:-210}});
+  const raw=first.getDiskState(),second=createOfflineVmContext({initialNativeState:raw});
+  const restored=new second.ctx.LedgerCloud.GuestStore(),r2=new second.ctx.LedgerReview.GuestReviewStore();
+  assert.equal(restored.current.words.length,9551);
+  assert.ok(restored.current.words.every(w=>w.exampleSentence&&w.exampleTranslation&&w.note.includes('原创教学例句')));
+  assert.equal(r2.settings.utcOffsetMinutes,-210);
+  assert.equal(second.ctx.LedgerReview.statisticsDay(Date.UTC(2026,9,20,2),r2.settings),'2026-10-19');
+  console.log('OFFICIAL_VM_BYTES',Buffer.byteLength(raw));
+});
+
+test('Failed native and IndexedDB review writes display actionable feedback without deleting in-memory history', async () => {
+  const env=createOfflineVmContext(),store=new env.ctx.LedgerCloud.GuestStore(),review=new env.ctx.LedgerReview.GuestReviewStore();
+  const messages=[];
+  await env.ctx.__onOfflineGuestReady({getStore:()=>store,getReviewStore:()=>review,setData:()=>{},render:()=>{},feedback:(...args)=>messages.push(args),status:()=>{}});
+  env.ctx.AndroidOffline.writeStateJson=()=>false;
+  review.record({settings:{utcOffsetMinutes:480}});
+  await new Promise(resolve=>setTimeout(resolve,0));
+  assert.equal(review.settings.utcOffsetMinutes,480);
+  assert.ok(messages.some(([text,error])=>error&&text.includes('尚未保存')));
+});
 
 test('Android offline bundle includes all required assets, font, styles, and scripts', () => {
   for (const rel of [

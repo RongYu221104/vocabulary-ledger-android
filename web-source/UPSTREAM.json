@@ -1,0 +1,13 @@
+{
+  "repository": "existing Vocabulary Ledger Sites source",
+  "gitSha": "6fb989e012b9cc5fcbc8f43a8e72d2fb0e873d81",
+  "siteVersion": null,
+  "source": "cloud/public",
+  "capturedAt": "2026-10-20T07:42:17.758Z",
+  "notes": "Website-only auth, community and online APIs are disabled by the offline adapter. Original source attribution retained.",
+  "deployedBaseline": {
+    "siteVersion": 28,
+    "gitSha": "df4e2022fc1592697518cf2f3679ee08c136835f"
+  },
+  "sourceStatus": "Reviewed candidate: same v28 functionality plus UTC guide wording correction; Sites archive upload pending."
+}
