@@ -1,6 +1,6 @@
 # Vocabulary Ledger Android 离线版
 
-> **1.2.0 发布验收进行中，GitHub Release 尚未发布。** Mate 70 / HarmonyOS 7.0 / 卓易通首轮人工验收完成；每小时 UTC 选择器的新包等待覆盖升级确认。见 [docs/RELEASE-CHECKPOINT.md](docs/RELEASE-CHECKPOINT.md)。下文描述当前源码功能，不是完整验收通过声明。
+> **1.2.0：Mate 70 / HarmonyOS 7.0 / 卓易通人工验收及同签名覆盖升级通过。** 原生 Android instrumentation 未运行。实际测试范围见 [功能对齐](docs/ANDROID-PARITY.md) 和 [版本说明](releases/RELEASE-1.2.0.md)；历史暂停过程保留在 [检查点](docs/RELEASE-CHECKPOINT.md)。
 
 Android 1.2.0（versionCode 4），包名 `site.chatgpt.rongyu1104.cetledger`。使用 Capacitor 6 与 Android 原生持久层，所有内置词库和字体随 APK 打包；Manifest 不申请 INTERNET 权限。
 
