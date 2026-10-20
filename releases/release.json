@@ -1,0 +1,27 @@
+{
+  "version": "1.2.0",
+  "versionCode": 4,
+  "package": "site.chatgpt.rongyu1104.cetledger",
+  "tag": "v1.2.0",
+  "gitSha": "501cf08c9ccd6ca421c3d2e71d54ca44a1f5c253",
+  "publishedAt": "2026-10-20T12:21:13Z",
+  "releaseUrl": "https://github.com/RongYu221104/vocabulary-ledger-android/releases/tag/v1.2.0",
+  "apk": "vocabulary-ledger-android-1.2.0.apk",
+  "apkBytes": 25095690,
+  "apkSha256": "9eb66f1d30f7ddf62f37d8597cd09c90c8624f54a8582f0202e790fac929758b",
+  "downloadVerified": true,
+  "certificateSha256": "06682961dead953cbbae7afdd30b6859c12f256be9456a0a0183e482eae79a87",
+  "website": {
+    "url": "https://vocabulary-ledger.rongyu1104.chatgpt.site",
+    "siteVersion": 29,
+    "gitSha": "7125f5b73cc314bc8307eb9fcdc260bac91317f8"
+  },
+  "verification": {
+    "offlineVmAndDesktopChromium": "10 passed",
+    "nativeJvm": "6 passed",
+    "signature": "v1 and v2 verified",
+    "physicalDevice": "Huawei Mate 70 / HarmonyOS 7.0 / Droitong; human installation, offline workflows and in-place upgrade acceptance",
+    "androidInstrumentationExecuted": false,
+    "limitations": "No native Android instrumentation or multi-device Android coverage. See ANDROID-PARITY.md and RELEASE-1.2.0.md for original candidate and final upgrade test scopes."
+  }
+}

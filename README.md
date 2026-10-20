@@ -61,3 +61,5 @@ powershell -NoProfile -File scripts/build-release.ps1 -Instrumentation
 大词库使用分块和分页限制 DOM，但本机持久层仍以整份 JSON 快照写入，复习时会验证并序列化当前账本；接近上限或低端设备需关注暂停与磁盘占用。数据上限沿用网页模型，并非无限容量。JSON 导入兼容不能代表任意旧版程序都能接受新增 UTC 字段。
 
 功能对齐、版本、APK 校验值和实际验证范围见 `docs/ANDROID-PARITY.md` 与 `releases/RELEASE-1.2.0.md`。工程总说明在完整项目的 `cloud/docs/AI-PROJECT-CONTEXT.md`，APK 仓库无需该兄弟目录也能构建。
+
+实际发布 URL、tag、Git SHA、APK 完整校验值及未执行的原生 instrumentation 状态见 [发布记录](releases/release.json)。维护文档可晚于 tag 的发布提交，不能据当前 main HEAD 改写已发布 APK 的来源。

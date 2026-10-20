@@ -1,4 +1,6 @@
-# 1.2.0 发布暂停检查点
+# 1.2.0 发布检查点历史
+
+> **最终状态：1.2.0 已于 2026-10-20 正式发布。** 同签名覆盖验收、APK 上传后下载校验完成；tag v1.2.0 指向 501cf08c9ccd6ca421c3d2e71d54ca44a1f5c253。实际记录见 [release.json](../releases/release.json) 与 [正式 Release](https://github.com/RongYu221104/vocabulary-ledger-android/releases/tag/v1.2.0)。下文“尚未/待验证”属于当时暂停或恢复时间点的历史状态，不代表当前结果。
 
 > 恢复更新：用户已确认 9eb66f1d 包可同签名覆盖安装，词库、个人词条、学习记录及每小时 UTC 设置退出重开均正常。网站 v29 已在原 Site 正式部署，源码 7125f5b73cc314bc8307eb9fcdc260bac91317f8；本文件以下暂停描述保留历史审计用途，当前版本以 releases/RELEASE-1.2.0.md 为准。
 
