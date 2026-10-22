@@ -2,7 +2,7 @@
 
 整理英语词汇，记录学习进度，让背诵和复习更有条理。
 
-## 📥 [下载 Android 安装包 · v1.2.0](https://github.com/RongYu221104/vocabulary-ledger-android/releases/download/v1.2.0/vocabulary-ledger-android-1.2.0.apk)
+## 📥 [下载 Android 安装包 · v1.3.0](https://github.com/RongYu221104/vocabulary-ledger-android/releases/download/v1.3.0/vocabulary-ledger-android-1.3.0.apk)
 
 **🌐 [打开网页版](https://vocabulary-ledger.rongyu1104.chatgpt.site/)**
 
