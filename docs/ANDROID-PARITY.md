@@ -24,7 +24,7 @@
 
 版本1.3.0 / code5，包名 `site.chatgpt.rongyu1104.cetledger`；26,423,912字节；APK SHA-256 `5c306867523fe7c1ac9dd0e3ac8f099982ff5e04647aa8a611bedcacf947d441`。
 
-沿用1.2.0同一证书 `06682961dead953cbbae7afdd30b6859c12f256be9456a0a0183e482eae79a87`、https://localhost origin、数据库/文件名及JSON。Release构建和设备测试APK构建成功，v1/v2签名通过、non-debuggable、包内89文件一致；instrumentation **未执行**。签名私钥、DPAPI与用户数据不公开。
+沿用1.2.0同一证书 `06682961dead953cbbae7afdd30b6859c12f256be9456a0a0183e482eae79a87`、https://localhost origin、数据库/文件名及JSON。Release构建和设备测试APK构建成功，v1/v2签名通过、non-debuggable、包内89个适配输出及2个Capacitor空占位文件一致；instrumentation **未执行**。签名私钥、DPAPI与用户数据不公开。
 
 鸿蒙7.0/卓易通新包真机测试：用户表示本轮不方便测试，故覆盖升级/断网/原生JSON文件选择器未实测。HDC没有目标，不假定可用ADB；软件模拟器无硬件加速，隔离设置后仍0xC0000005崩溃，未进入可安装状态。没有卸载或清数据。旧1.2.0真实反馈保留在 [历史记录](history/ANDROID-PARITY-1.2.0.md)，不能算本版新验收。
 
