@@ -1,8 +1,8 @@
 {
   "repository": "existing Vocabulary Ledger Sites source",
-  "gitSha": "7125f5b73cc314bc8307eb9fcdc260bac91317f8",
-  "siteVersion": null,
+  "gitSha": "7abd627af0798821eb37f982ce0e439954af365b",
+  "siteVersion": 33,
   "source": "cloud/public",
-  "capturedAt": "2026-10-20T12:06:47.449Z",
-  "notes": "Captured reviewed website source before deployment. Final Sites deployment provenance is recorded in release notes; online-only features are disabled by the offline adapter. Original attribution retained."
+  "capturedAt": "2026-10-22T09:23:12.072Z",
+  "notes": "Website-only auth, community and online APIs are disabled by the offline adapter. Original source attribution retained."
 }

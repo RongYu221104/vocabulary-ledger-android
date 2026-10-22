@@ -176,6 +176,15 @@ html = assertReplace(
   'ledger.html footer text'
 );
 
+html = assertReplace(html,
+  '未公开账本仅你可见；社区只开放你勾选的账本，独立分享链接开放已选快照。请定期导出 JSON 备份。',
+  '本机数据不会自动上传；请定期导出 JSON，并在应用或卓易通容器之外另存备份。',
+  'ledger.html offline privacy footer');
+html = assertReplace(html,
+  'Sites 可设置访问统计与安全 Cookie，不含词条内容。',
+  '卸载应用、清除应用或卓易通容器数据可能导致本机内容丢失。',
+  'ledger.html offline recovery footer');
+
 fs.writeFileSync(ledgerHtmlPath, html, 'utf8');
 fs.writeFileSync(path.join(wwwDir, 'index.html'), html, 'utf8');
 
