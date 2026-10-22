@@ -1,38 +1,31 @@
-# 1.2.0 离线功能对齐与验收范围
+# Android 1.3.0：网页 v33 功能对齐与验收范围
 
-网页源基线、候选状态见 `web-source/UPSTREAM.json`；本文件随最终设备反馈更新。独立 Android 工程无需兄弟 cloud 目录即可从固定源构建。
+核实日期：2026-10-22。网页源码固定 `7abd627af0798821eb37f982ce0e439954af365b`，Android 发布源码/tag为 `0da4a256c0c7b99ff689f76a26b7ea7b36654fde` / `v1.3.0`。发布状态以 `releases/release.json` 及公开 Release 实际记录为准，不用本文件宣称尚未完成的上传。
 
-| 网页模块 | 离线实现 | 当前验证依据与边界 |
+独立工程 `web-source/UPSTREAM.json` 和 `SOURCE_MANIFEST.json` 锁定完整84文件；生成89文件随APK打包，不依赖兄弟cloud目录或运行时网络。
+
+| 网页模块 | Android 1.3.0 对齐 | 本轮证据及限制 |
 |---|---|---|
-| 账本及词条 CRUD、备注、双语例句、掌握状态 | 同一 model/app/UI，本地 OfflineLedgerStore 保存 | VM、桌面真实 Chromium；手机反馈另列 |
-| 考试子账本、多维自定义分组、搜索/排序/筛选 | 同一 groups/order/folios 结构，保存于既有 JSON envelope | 全部静态业务源同步；旧结构持久化集成检查 |
-| 官方分类、搜索、A–Z、预览、分页 | 同一 official.js/official-ui.js，52 个 JSON 分块随包 | APK 内 57 个词库和来源文件字节一致；4,149 / 5,418 源记录 |
-| 整本独立复制 | 同一 importTag 模型，保存到本机，不调用云 API | 完整词库 VM 复制共 9,551 个个人词条，无截断；Mate 70 卓易通用户实测断网浏览、复制、退出重开整组通过 |
-| 遗忘曲线 | 同一 curve.js，1/2/3/5/7 天，之后每 7 天；保留旧 FSRS 卡片 | 网页算法确定性测试和离线持久化集成通过；不在手机上改日期伪造七天验收 |
-| 四档统计、今日进度、30 天趋势、学习记录 | 同一 review/review-ui，离线 review envelope | 未学习/记忆中/巩固中/已掌握互斥；桌面 UI 及模型检查 |
-| 每日新词、UTC/GMT 统计重置、倒计时 | 同一设置 UI；偏移与进度本地持久化 | 选择器 -12 到 +14、每小时一档；保留旧非整点设置；历史日聚合不重写；首轮手机未见明显异常，新包覆盖与 +8 设置重开保留已获用户确认 |
-| JSON v1/v2、合并/覆盖预览、自动备份 | 同一模型及 review 分节；系统导入选择器、原生 ACTION_CREATE_DOCUMENT 导出 | VM/桌面流程通过；卓易通用户确认实际导出文件及合并导入成功，不清空数据 |
-| 数据持久化与故障恢复 | 原子同目录替换、备份、SQLite 镜像、IndexedDB；较新镜像 savedAt 选择 | 原生存储 JUnit 5 项通过，外加模板 1 项；本地双写都失败时显示提示 |
-| 移动 UI、触摸、动画、返回键、键盘避让 | 网页资源 + android-offline.css 与 MainActivity 返回桥 | 桌面 Chromium 七档视口通过；实际手机仅按真实反馈记录 |
-| 字体和图形 | 本地 Source Han Serif SC Regular、OFL 与 NOTICE，SVG/图标随包 | 无需运行时网络；不分发 Georgia 字体文件 |
-| ChatGPT 登录/身份会话 | 不提供，显示离线限制 | 不伪造在线账号；手机容器本身的登录与本应用无关 |
-| 账号云同步、D1、跨设备保存 | 不提供；使用 JSON 手动迁移 | 应用 Manifest 不申请 INTERNET，不以本地存储称云同步 |
-| 在线社区、公开账本发布、分享链接、在线头像/资料 | 不提供；在线入口由适配层隐藏或拦截 | 不新增云账号和在线 API；原始已发布社区内容不受 APK 操作影响 |
+| 账本/词条新增、编辑、删除、掌握、双语备注 | 相同app/model/UI；本机OfflineLedgerStore | VM及真实Edge个人编辑/退出重开；不改用户旧数据 |
+| 主账本/子账本、多维分组、排序/筛选/搜索 | 完整groups/order/folios；全局只搜英文与中文释义，局部保留例句 | 上游84文件pin、生成适配断言、旧JSON/结构持久化检查 |
+| 官方浏览、分类、搜索、A–Z、分页 | 完整CET4/CET6、来源provenance，最多4路分块预取、每页50条 | 4149+5418=9567；5080真题+4487原创；12项测试含全量数据检查 |
+| 官方整本复制为个人账本 | 本地原子模型追加；同形合并保留所有内容 | VM与实际Edge复制4068+5331=9399；重开后9399仍在 |
+| 词条排版 | 词头不带词性，释义前缀POS，双语分别加粗；精简真实试卷来源、有效派生备注 | 全量模型/跨度/来源检查；实际查看跨级真题卡与长文本 |
+| 复习 | 相同1→2→3→5→7天、之后7天；忘记重排、翻阅/洗牌/提前巩固 | 纯曲线/持久化检查；Edge完成一次实际翻面/评分并重开 |
+| 四档统计、今日/30天、每日新词 | 相同review/review-ui，互斥四档；0–9999设置 | Edge9398未学+1记忆中；新学/今日记录重开保留 |
+| UTC/GMT设置与倒计时 | 每小时UI、底层兼容15分钟；统计日与调度日分开 | 所有15分钟偏移边界自动检查；Edge UTC+8重开保留；无新手机跨日实测 |
+| JSON v1/v2、合并/覆盖预览、备份 | 兼容原format/字段；系统导入、ACTION_CREATE_DOCUMENT导出；本地辅助备份 | VM/原生委托与格式检查；桌面下载事件超时，未获新手机文件选择器实测 |
+| 原生数据恢复 | 原子主/备份文件+SQLite镜像+IndexedDB，按较新有效savedAt恢复 | 原生存储JUnit5+模板1；双写失败反馈保留 |
+| 最新暖色漫画UI、字体、触摸、返回/键盘 | 全资源本地；适配层保留原生返回/键盘，页脚改为本机备份提示 | Edge官方/复习7档320–1440共14组合无横溢出、console无warn/error；不是所有设备结论 |
+| ChatGPT身份/云同步/D1 | 离线不提供 | 禁止网络API，Manifest无INTERNET；不伪造账号或称本地存储为云同步 |
+| 社区/资料/在线分享 | 在线入口禁用或拦截 | JSON是手动跨端迁移方式；不改变网页上的既有公开内容 |
 
-## HarmonyOS / 卓易通
+## 构建、签名与真实设备范围
 
-用户设备为华为 Mate 70、HarmonyOS 7.0，APK 通过卓易通安装。该环境的实际通过项属于兼容层验收，不是原生 HarmonyOS HAP，也不是原生 Android instrumentation。HDC 能识别鸿蒙宿主不意味着能安装 Android APK 或访问容器内的 Android 测试运行器。
+版本1.3.0 / code5，包名 `site.chatgpt.rongyu1104.cetledger`；26,423,912字节；APK SHA-256 `5c306867523fe7c1ac9dd0e3ac8f099982ff5e04647aa8a611bedcacf947d441`。
 
-2026-10-20 用户信任电脑指纹后，HDC 3.2.0c 实际显示 Connected，只读 shell 返回 CLS-AL00 / OpenHarmony-7.0.0.105。宿主有 aa/bm 等鸿蒙工具，未检测到 adb/am/pm；尚无已验证的卓易通 APK 调试桥。c8f78510 签名候选由用户手动安装并确认能打开，官方词库及持久化人工测试通过；复习、UTC 整组反馈“感觉没什么问题”，JSON 导出及合并整组“均成功”。改为每小时一档后，用户对指定 9eb66f1d 新包覆盖安装、数据/记录保留、每小时列表及 +8 设置退出重开保留整组回复“均正常，可覆盖安装”。该包本机 VM/桌面回归 10/10、JUnit 6/6、签名 v1/v2 通过；没有对它重新运行全部首轮手机流程。不能把 HDC 连接成功写成 APK 自动化通过。
+沿用1.2.0同一证书 `06682961dead953cbbae7afdd30b6859c12f256be9456a0a0183e482eae79a87`、https://localhost origin、数据库/文件名及JSON。Release构建和设备测试APK构建成功，v1/v2签名通过、non-debuggable、包内89文件一致；instrumentation **未执行**。签名私钥、DPAPI与用户数据不公开。
 
-系统文件管理的 `我的手机/Download`，在卓易通文件选择器中可能对应 `MyHarmonyDevice（我的设备(鸿蒙)）/Download`。按华为支持说明和设备实际表现验收，不假定两个文件选择器完全等同。
+鸿蒙7.0/卓易通新包真机测试：用户表示本轮不方便测试，故覆盖升级/断网/原生JSON文件选择器未实测。HDC没有目标，不假定可用ADB；软件模拟器无硬件加速，隔离设置后仍0xC0000005崩溃，未进入可安装状态。没有卸载或清数据。旧1.2.0真实反馈保留在 [历史记录](history/ANDROID-PARITY-1.2.0.md)，不能算本版新验收。
 
-完整真实设备过程记录在完整工程 `qa/integration-20261019/HARMONY-DEVICE-QA.md`；发布说明将列出最终通过项和未验证项。当前未运行 Release instrumentation，不能用构建成功替代运行成功。
-
-## 构建与数据保护
-
-包名、WebView origin、IndexedDB/SQLite 和 JSON 标识保留。1.2.0 首次引入经用户批准的独立 Release 密钥，和旧 Debug 签名不同；不能直接覆盖旧 Debug 包。禁止为测试擅自卸载或清除已有数据。后续同正式证书版本使用覆盖升级，并验证本地数据保留。
-
-全量复制 instrumentation 明确要求目标实例为空；已有内容时断言失败，不调用清理 API。不要将此 fixture 用在真实个人账本上。
-
-大词库限制 DOM 数量，但原生持久层仍写整份快照；该实现的磁盘/序列化成本没有被重构成逐词数据库。APK 约 25 MB，具体 SHA-256 和最终尺寸以实际 Release 附件为准。
+完整本轮本地证据位于项目根 `qa/android-v33-20261022/`。构建复现：`node scripts/sync-web.mjs`、`node --test tests/android-offline.test.mjs tests/v33-parity.test.mjs`、`scripts/build-release.ps1 -Instrumentation`。已发布同名APK必须冻结；之后验证用Gradle build输出，不覆盖正式releases文件。详见附件安装说明和更新日志。
