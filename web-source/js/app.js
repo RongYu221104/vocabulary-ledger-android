@@ -3,7 +3,7 @@
   const M = window.LedgerModel, S = window.LedgerCloud, O = window.LedgerOrder, G = window.LedgerGroups, R = window.LedgerReview;
   const $ = id => document.getElementById(id);
   let store = new S.GuestStore(), identity = null, accountGeneration = 0, leaving = false, authExported = false, mergeImport = null;
-  const sessionGate = new S.SessionGate(), PRIVACY_AFTER_MS = 30000;
+  const sessionGate = new S.SessionGate(), PRIVACY_AFTER_MS = 5 * 60 * 1000;
   let awaySince = null, awayTimer = null, resumeTimer = null, automaticRefresh = null, privacyReturnFocus = null;
   let identityChannel = null;
   try { identityChannel = new BroadcastChannel('cet-ledger-session-v1'); } catch { /* Focus checks still work without channel support. */ }
@@ -497,7 +497,7 @@
   }
   function visibleWords(global, tags) {
     const ids = global ? null : new Set(tags.map(t => t.id));
-    const words = M.findWords(data, { query: global ? $('global-search').value : $('local-search').value, filter: $('status-filter').value }).filter(w => !ids || ids.has(w.tagId));
+    const words = M.findWords(data, { query: global ? $('global-search').value : $('local-search').value, filter: $('status-filter').value, includeExamples: !global }).filter(w => !ids || ids.has(w.tagId));
     return O.sortWords(words, sortMode, ordering().ranks, shuffleRanks);
   }
   // Keep a freshly added entry on screen whichever order is active.

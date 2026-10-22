@@ -318,10 +318,13 @@
     const li = el('li', 'of-entry'); li.dataset.id = e.id; if (wave >= 0) { li.classList.add('is-dealt'); li.style.setProperty('--i', String(wave)); }
     const head = el('div', 'of-entry-head'), folio = el('span', 'of-folio num', String(e.folio || '').padStart(4, '0')), en = el('span', 'of-en', e.english);
     folio.setAttribute('aria-hidden', 'true'); en.lang = 'en'; head.append(folio, en);
-    if (e.pos.length && !e.senses.length) { const p = el('span', 'of-pos', e.pos.join(' / ')); p.lang = 'en'; head.append(p); }
     li.append(head);
     if (e.senses.length) for (const s of e.senses) { const p = el('p', 'of-meaning'); if (s.pos) { const t = el('span', 'of-pos', s.pos); t.lang = 'en'; p.append(t, ' '); } p.append(document.createTextNode(s.meaning)); li.append(p); }
-    if (e.meaning) li.append(el('p', 'of-meaning preserve-lines', e.meaning));
+    if (e.meaning) {
+      const p = el('p', 'of-meaning preserve-lines');
+      if (e.pos.length && !e.senses.length) { const pos = el('span', 'of-pos', e.pos.join(' / ')); pos.lang = 'en'; p.append(pos, ' '); }
+      p.append(document.createTextNode(e.meaning)); li.append(p);
+    }
     for (const x of e.examples) {
       const ex = el('div', 'of-example'), s = rich(el('p', 'of-ex-en preserve-lines'), x.en); s.lang = 'en'; ex.append(s);
       if (x.zh) ex.append(rich(el('p', 'of-ex-zh preserve-lines'), x.zh));

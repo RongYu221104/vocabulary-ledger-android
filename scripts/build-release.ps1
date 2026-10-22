@@ -27,12 +27,15 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Release build/tests failed.' }
   } finally { Pop-Location }
   New-Item -ItemType Directory -Force -Path releases | Out-Null
-  $taskApk = 'releases/vocabulary-ledger-android-1.2.0.apk'
+  $taskVersion = (Get-Content -Raw -LiteralPath 'package.json' | ConvertFrom-Json).version
+  $taskFilename = "vocabulary-ledger-android-$taskVersion.apk"
+  $taskApk = Join-Path 'releases' $taskFilename
   Copy-Item -LiteralPath 'android/app/build/outputs/apk/release/app-release.apk' -Destination $taskApk
   & (Join-Path $env:ANDROID_HOME 'build-tools/35.0.0/apksigner.bat') verify --verbose --print-certs $taskApk
   if ($LASTEXITCODE -ne 0) { throw 'APK signature verification failed.' }
   $taskHash = (Get-FileHash -LiteralPath $taskApk -Algorithm SHA256).Hash.ToLowerInvariant()
-  "$taskHash  vocabulary-ledger-android-1.2.0.apk" | Set-Content -LiteralPath 'releases/SHA256SUMS.txt'
+  $taskPreviousSums = @(Get-Content -LiteralPath 'releases/SHA256SUMS.txt' -ErrorAction SilentlyContinue | Where-Object { $_ -and -not $_.EndsWith("  $taskFilename") })
+  @($taskPreviousSums; "$taskHash  $taskFilename") | Set-Content -LiteralPath 'releases/SHA256SUMS.txt'
   Write-Output "Release APK: $taskApk; SHA-256: $taskHash"
 } finally {
   Pop-Location

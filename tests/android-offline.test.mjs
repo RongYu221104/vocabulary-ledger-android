@@ -166,12 +166,14 @@ test('Packaged official books copy without field loss and fixed UTC settings sur
     await store.save(M.mutate(store.current,'importTag',{name:raw.title,date:'2026-10-20',words:mapped.words}),{action:'importTag'});
   }
   assert.equal(records,9567);
-  assert.equal(store.current.words.length,9551);
+  assert.equal(store.current.words.length,9399);
   review.record({settings:{utcOffsetMinutes:-210}});
   const raw=first.getDiskState(),second=createOfflineVmContext({initialNativeState:raw});
   const restored=new second.ctx.LedgerCloud.GuestStore(),r2=new second.ctx.LedgerReview.GuestReviewStore();
-  assert.equal(restored.current.words.length,9551);
-  assert.ok(restored.current.words.every(w=>w.exampleSentence&&w.exampleTranslation&&w.note.includes('原创教学例句')));
+  assert.equal(restored.current.words.length,9399);
+  assert.ok(restored.current.words.every(w=>w.exampleSentence&&w.exampleTranslation&&w.note.includes('来源：')));
+  assert.ok(restored.current.words.some(w=>w.note.includes('来源：六级·2024年6月·第2套')));
+  assert.ok(restored.current.words.some(w=>w.note.includes('来源：原创')));
   assert.equal(r2.settings.utcOffsetMinutes,-210);
   assert.equal(second.ctx.LedgerReview.statisticsDay(Date.UTC(2026,9,20,2),r2.settings),'2026-10-19');
   console.log('OFFICIAL_VM_BYTES',Buffer.byteLength(raw));
@@ -216,6 +218,7 @@ test('Android offline bundle includes all required assets, font, styles, and scr
   assert.match(html, /js\/android-offline\.js/);
   assert.match(html, /本机离线/);
   assert.match(html, /已保存在本机 · 离线可用/);
+  assert.doesNotMatch(html, /Sites 可设置访问统计|社区只开放你勾选的账本/);
 });
 
 test('Offline persistence survives app restart with full ledger, sub-ledgers, words, notes, bold examples, and FSRS review progress', async () => {

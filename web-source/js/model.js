@@ -214,9 +214,9 @@
   function sortedTags(state) {
     return state.tags.map((tag, position) => ({ tag, position })).sort((a, b) => b.tag.date.localeCompare(a.tag.date) || b.tag.createdAt.localeCompare(a.tag.createdAt) || b.position - a.position).map(x => x.tag);
   }
-  function findWords(state, { tagId = null, query = '', filter = 'all' } = {}) {
+  function findWords(state, { tagId = null, query = '', filter = 'all', includeExamples = true } = {}) {
     const q = normalize(query);
-    return state.words.filter(w => (!tagId || w.tagId === tagId) && (filter === 'all' || w.mastered === (filter === 'mastered')) && (!q || normalize(w.english).includes(q) || normalize(w.meaning).includes(q) || normalize(w.exampleSentence.replaceAll('**', '')).includes(q) || normalize(w.exampleTranslation.replaceAll('**', '')).includes(q))).reverse();
+    return state.words.filter(w => (!tagId || w.tagId === tagId) && (filter === 'all' || w.mastered === (filter === 'mastered')) && (!q || normalize(w.english).includes(q) || normalize(w.meaning).includes(q) || (includeExamples && (normalize(w.exampleSentence.replaceAll('**', '')).includes(q) || normalize(w.exampleTranslation.replaceAll('**', '')).includes(q))))).reverse();
   }
   function mergePreview(current, incoming) {
     const names=new Map(current.tags.map(t=>[normalize(t.name),t.id])), targets=new Map(), keys=new Set(current.words.map(w=>w.tagId+'\u0000'+normalize(w.english)));let tags=0,words=0;

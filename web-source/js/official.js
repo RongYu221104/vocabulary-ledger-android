@@ -209,11 +209,23 @@
         const href = new URL(url, typeof location !== 'undefined' ? location.href : 'http://localhost/').href;
         return normalizeCatalog(await getJson(href, signal, true), { base: href, origin: new URL(href).origin });
       },
-      // Chunked ledgers arrive part by part; each part is announced as soon as it is ready.
+      // Keep at most four chunks in flight. Consume in catalog order so entry IDs, sorting and progress stay stable.
       async entries(ledger, { signal, onChunk } = {}) {
         const all = []; let skipped = 0;
+        const pending = new Map(); let next = 0;
+        const preload = () => {
+          while (next < ledger.files.length && pending.size < 4) {
+            const index = next++;
+            // Attach rejection handlers immediately: a later chunk may fail before the first chunk finishes.
+            pending.set(index, getJson(ledger.files[index], signal).then(value => ({ value }), error => ({ error })));
+          }
+        };
+        preload();
         for (let i = 0; i < ledger.files.length; i++) {
-          const part = normalizeEntries(await getJson(ledger.files[i], signal), ledger.id, all.length + skipped);
+          const result = await pending.get(i); pending.delete(i);
+          if (result.error) throw result.error;
+          preload();
+          const part = normalizeEntries(result.value, ledger.id, all.length + skipped);
           const room = LIMITS.entries - all.length; all.push(...part.entries.slice(0, room)); skipped += part.skipped + Math.max(0, part.entries.length - room);
           onChunk?.({ entries: all, loaded: i + 1, parts: ledger.files.length, skipped });
         }
